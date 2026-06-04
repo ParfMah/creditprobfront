@@ -1033,7 +1033,22 @@
           }
         }
         .numbers-grid {
-          grid-template-columns: 1fr 1fr !important;
+          grid-template-columns: 1fr !important; /* Passe à une colonne verticale */
+          gap: var(
+            --spacing-xl
+          ) !important; /* Donne de l'espace entre les chiffres */
+        }
+
+        .number-card {
+          border-right: none !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Ligne de séparation horizontale discrète */
+          padding-bottom: var(--spacing-lg);
+          width: 100%;
+        }
+
+        .number-card:last-child {
+          border-bottom: none; /* Retire la ligne sous la dernière statistique */
+          padding-bottom: 0;
         }
         .partners-grid {
           grid-template-columns: repeat(2, 1fr) !important;

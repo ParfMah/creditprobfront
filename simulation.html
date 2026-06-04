@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<style id="critical-css">
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden;scroll-behavior:smooth}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  #page-loader{position:fixed;inset:0;z-index:99999;background:#0B1D3A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .45s ease,visibility .45s ease}
+  #page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .loader-logo{display:flex;align-items:center;gap:12px}
+  .loader-logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#D4A843,#b5882a);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .loader-logo-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff}
+  .loader-logo-text span{display:block;font-size:.65rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .loader-spinner-wrap{position:relative;width:56px;height:56px}
+  .loader-spinner{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.08);border-top-color:#D4A843;border-right-color:rgba(212,168,67,.4);animation:spin .9s cubic-bezier(.45,.05,.55,.95) infinite}
+  .loader-spinner-inner{position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,255,255,.04);border-bottom-color:rgba(212,168,67,.6);animation:spin 1.4s cubic-bezier(.45,.05,.55,.95) infinite reverse}
+  .loader-progress-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .loader-progress-fill{height:100%;background:linear-gradient(90deg,#D4A843,#e8c96a,#D4A843);background-size:200% 100%;border-radius:99px;animation:prog 1.2s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes prog{0%{background-position:200% 0;width:20%}50%{background-position:0% 0;width:80%}100%{background-position:-200% 0;width:100%}}
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center}
+</style>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#D4A843">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kreditrechner KreditProfi Deutschland – Berechnen Sie Ihre monatliche Rate, Gesamtkosten und Tilgungsplan in Echtzeit. Kostenlos und unverbindlich.">
+  <title>Kreditrechner — Kostenlos berechnen | KreditProfi Deutschland</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Berechnen Sie Ihre monatliche Rate kostenlos mit unserem Kreditrechner. Transparente Konditionen, sofortige Ergebnisse. Jetzt Kredit simulieren.">
+  <meta name="keywords" content="Kreditrechner, Kreditrechner Deutschland, monatliche Rate berechnen, Zinsen berechnen">
+  <meta name="author" content="KreditProfi Deutschland GmbH">
+  <meta name="robots" content="index, follow">
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="Kreditrechner — Kostenlos berechnen | KreditProfi Deutschland">
+  <meta property="og:description" content="Berechnen Sie Ihre monatliche Rate kostenlos mit unserem Kreditrechner. Transparente Konditionen, sofortige Ergebnisse. Jetzt Kredit simulieren.">
+  <meta property="og:url"         content="https://kreditprofi-deutschland.onrender.com/simulation.html">
+  <meta property="og:site_name"   content="KreditProfi Deutschland">
+  <meta property="og:locale"      content="de_DE">
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary">
+  <meta name="twitter:title"       content="Kreditrechner — Kostenlos berechnen | KreditProfi Deutschland">
+  <meta name="twitter:description" content="Berechnen Sie Ihre monatliche Rate kostenlos mit unserem Kreditrechner. Transparente Konditionen, sofortige Ergebnisse. Jetzt Kredit simulieren.">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/cookie-consent.css">
+  <link rel="stylesheet" href="assets/css/loader.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <style>
+    /* ── STYLES SPÉCIFIQUES PAGE SIMULATION ── */
+
+    /* Sélecteur de type de prêt (onglets stylisés) */
+    .loan-type-selector {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .loan-type-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 16px 20px;
+      background: var(--color-white);
+      border: 2px solid var(--color-gray-200);
+      border-radius: var(--border-radius-xl);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      min-width: 100px;
+      font-family: var(--font-body);
+    }
+
+    .loan-type-btn .type-icon { font-size: 1.8rem; }
+    .loan-type-btn .type-label {
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      color: var(--color-gray-600);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .loan-type-btn:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .loan-type-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .loan-type-btn.active .type-label { color: white; }
+
+    /* Zone principale du simulateur */
+    .simulator-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-2xl);
+      align-items: start;
+    }
+
+    /* Panneau gauche : contrôles */
+    .simulator-controls {
+      background: var(--color-white);
+      border-radius: var(--border-radius-2xl);
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Panneau droit : résultats */
+    .simulator-results {
+      background: var(--color-primary);
+      border-radius: var(--border-radius-2xl);
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-xl);
+      position: sticky;
+      top: calc(var(--header-height) + 1rem);
+    }
+
+    /* Slider groupe */
+    .slider-group {
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .slider-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .slider-label {
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slider-value-display {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--color-secondary);
+      background: rgba(201,168,76,0.08);
+      padding: 6px 14px;
+      border-radius: var(--border-radius-md);
+      border: 1px solid rgba(201,168,76,0.2);
+      min-width: 120px;
+      text-align: right;
+    }
+
+    .slider-limits {
+      display: flex;
+      justify-content: space-between;
+      margin-top: var(--spacing-xs);
+      font-size: var(--font-size-xs);
+      color: var(--color-gray-400);
+    }
+
+    /* Carte de résultat */
+    .result-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--border-radius-xl);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+      transition: all var(--transition-base);
+    }
+
+    .result-card.highlight {
+      background: rgba(201,168,76,0.12);
+      border-color: rgba(201,168,76,0.3);
+    }
+
+    .result-label {
+      font-size: var(--font-size-xs);
+      color: rgba(255,255,255,0.55);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-value {
+      font-family: var(--font-heading);
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: var(--color-white);
+      line-height: 1;
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .result-card.highlight .result-value {
+      color: var(--color-secondary);
+      font-size: 2.4rem;
+    }
+
+    .result-sub {
+      font-size: var(--font-size-xs);
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+    }
+
+    /* Résultats en grille 2 colonnes */
+    .results-mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    /* Graphique canvas */
+    .chart-container {
+      background: var(--color-white);
+      border-radius: var(--border-radius-2xl);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-md);
+      margin-top: var(--spacing-2xl);
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: var(--spacing-xl);
+      justify-content: center;
+      margin-top: var(--spacing-lg);
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-600);
+      font-weight: 500;
+    }
+
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+
+    /* Tableau d'amortissement */
+    .amortization-section {
+      margin-top: var(--spacing-2xl);
+    }
+
+    .amortization-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-lg) var(--spacing-xl);
+      background: var(--color-primary);
+      color: white;
+      border-radius: var(--border-radius-lg);
+      cursor: pointer;
+      font-weight: 700;
+      transition: background var(--transition-fast);
+      border: none;
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: var(--font-size-base);
+    }
+
+    .amortization-toggle:hover { background: var(--color-accent); }
+
+    .amortization-table-wrap {
+      display: none;
+      margin-top: var(--spacing-md);
+      overflow-x: auto;
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .amortization-table-wrap.open { display: block; animation: fadeIn 0.3s ease; }
+
+    /* Barre de décomposition capital/intérêts */
+    .decomposition-bar {
+      height: 12px;
+      border-radius: var(--border-radius-full);
+      overflow: hidden;
+      background: var(--color-gray-200);
+      margin: var(--spacing-md) 0;
+      display: flex;
+    }
+
+    .decomp-capital {
+      background: linear-gradient(90deg, var(--color-accent), #2d52b8);
+      transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .decomp-interest {
+      background: linear-gradient(90deg, var(--color-secondary-dark), var(--color-secondary));
+      flex: 1;
+      transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .decomp-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--font-size-xs);
+      color: var(--color-gray-500);
+    }
+
+    .decomp-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .decomp-dot-blue { width: 10px; height: 10px; border-radius: 50%; background: var(--color-accent); }
+    .decomp-dot-gold { width: 10px; height: 10px; border-radius: 50%; background: var(--color-secondary); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .simulator-layout { grid-template-columns: 1fr; }
+      .simulator-results { position: static; }
+    }
+
+    @media (max-width: 768px) {
+      .simulator-controls { padding: var(--spacing-lg); }
+      .simulator-results  { padding: var(--spacing-lg); }
+      .loan-type-selector { flex-wrap: wrap; }
+      .slider-label-row   { flex-wrap: wrap; gap: var(--spacing-sm); }
+      .chart-container    { padding: var(--spacing-lg); overflow-x: hidden; }
+      .chart-container canvas { max-width: 100%; }
+      /* CTA grid : 1 colonne sur tablette */
+      .cta-cards-grid {
+        grid-template-columns: 1fr !important;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .loan-type-selector { gap: 6px; }
+      .loan-type-btn { min-width: 76px; padding: 12px 8px; flex: 1; }
+      .loan-type-btn .type-icon { font-size: 1.4rem; }
+      .results-mini-grid { grid-template-columns: 1fr; }
+      .result-value { font-size: 1.5rem !important; }
+      .result-card.highlight .result-value { font-size: 1.9rem !important; }
+      .slider-value-display { min-width: 90px !important; font-size: var(--font-size-base) !important; }
+    }
+
+    @media (max-width: 375px) {
+      .loan-type-btn { min-width: 60px; padding: 10px 6px; }
+      .loan-type-btn .type-label { font-size: 9px; }
+    }
+
+    /* CTA grid : 3 colonnes sur desktop par défaut */
+    .cta-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-xl);
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .cta-cards-grid { grid-template-columns: 1fr !important; gap: var(--spacing-lg); }
+    }
+  </style>
+
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="KreditProfi Deutschland">
+  <meta property="og:locale"      content="de_DE">
+  <meta property="og:url"         content="https://kreditprofi-backend.onrender.com/simulation.html">
+  <meta property="og:title"       content="Kreditrechner — KreditProfi Deutschland">
+  <meta property="og:description" content="Berechnen Sie Ihre monatliche Rate und Gesamtkosten. Kostenlos und unverbindlich.">
+  <meta property="og:image"       content="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80&fm=webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height"content="630">
+  <meta property="og:image:alt"   content="KreditProfi Deutschland">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="Kreditrechner — KreditProfi Deutschland">
+  <meta name="twitter:description"content="Berechnen Sie Ihre monatliche Rate und Gesamtkosten. Kostenlos und unverbindlich.">
+  <meta name="twitter:image"      content="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80&fm=webp">
+</head>
+
+<body>
+<script>
+(function(){
+  // Retour navigateur (bfcache) : enlève tout masquage résiduel instantanément
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted){
+      document.body.style.visibility = '';
+      document.body.style.opacity = '';
+      document.body.classList.remove('css-loading');
+      var l = document.getElementById('page-loader');
+      if(l){ l.style.opacity='0'; l.style.visibility='hidden'; if(l.parentNode) l.parentNode.removeChild(l); }
+    }
+  });
+})();
+</script>
+
+<!-- ══ HEADER ════════════════════════════════════════════════ -->
+<header id="site-header" class="site-header header-light" role="banner">
+  <nav class="navbar" aria-label="Hauptnavigation">
+    <a href="index.html" class="logo" aria-label="KreditProfi Deutschland">
+      <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="200" height="40">
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"       class="nav-link" style="color:var(--color-primary);">Startseite</a></li>
+      <li><a href="leistungen.html"  class="nav-link" style="color:var(--color-primary);">Leistungen</a></li>
+      <li><a href="simulation.html"  class="nav-link active" style="color:var(--color-primary);">Kreditrechner</a></li>
+      <li><a href="ueber-uns.html"   class="nav-link" style="color:var(--color-primary);">Über uns</a></li>
+      <li><a href="kontakt.html"     class="nav-link" style="color:var(--color-primary);">Kontakt</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="mein-konto.html" id="nav-account-link" class="nav-link" style="display:none;color:var(--color-primary);"><span id="nav-user-name">Mein Konto</span></a>
+      <a href="mein-konto.html#notifications" id="nav-notif-area" class="nav-notif" style="display:none;background:rgba(10,22,40,0.08);color:var(--color-primary);" aria-label="Benachrichtigungen">🔔<span class="notif-badge" id="nav-notif-count" style="display:none;">0</span></a>
+      <a href="login.html" id="nav-login-btn" class="btn btn-outline btn-sm">Anmelden</a>
+      <button id="nav-logout-btn" class="btn btn-outline btn-sm" style="display:none;" onclick="window.KP?.logout()">Abmelden</button>
+      <a href="beantragen.html" class="btn btn-primary btn-sm hide-mobile">Jetzt beantragen</a>
+      <button id="menu-toggle" class="menu-toggle" aria-label="Menü öffnen" aria-expanded="false"><span style="background:var(--color-primary);"></span><span style="background:var(--color-primary);"></span><span style="background:var(--color-primary);"></span></button>
+    </div>
+  </nav>
+</header>
+
+<nav id="mobile-menu" class="mobile-menu">
+  <a href="index.html"       class="mobile-nav-link">🏠 Startseite</a>
+  <a href="leistungen.html"  class="mobile-nav-link">📋 Leistungen</a>
+  <a href="simulation.html"  class="mobile-nav-link">🧮 Kreditrechner</a>
+  <a href="ueber-uns.html"   class="mobile-nav-link">👥 Über uns</a>
+  <a href="kontakt.html"     class="mobile-nav-link">✉️ Kontakt</a>
+  <a href="mein-konto.html"  class="mobile-nav-link">👤 Mein Konto</a>
+  <hr style="border-color:rgba(255,255,255,0.1);margin:1rem 0;">
+  <a href="beantragen.html" class="btn btn-primary btn-full" style="text-align:center;">Jetzt beantragen</a>
+</nav>
+
+
+<!-- ══ BANNIÈRE ═══════════════════════════════════════════════ -->
+<div class="page-offset">
+  <div class="page-banner page-banner-simulation">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span class="breadcrumb-item"><a href="index.html">Startseite</a></span>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-item">Kreditrechner</span>
+      </nav>
+      <h1 class="animate-on-scroll fade-up" style="background:linear-gradient(135deg,#ffffff 0%,#D4A843 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">🧮 Kreditrechner</h1>
+      <p class="animate-on-scroll fade-up delay-1">Berechnen Sie Ihre monatliche Rate, Gesamtkosten und Ihren Tilgungsplan — in Echtzeit, kostenlos und unverbindlich.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SIMULATEUR PRINCIPAL ═══════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+
+    <!-- Sélecteur de type de prêt -->
+    <div class="animate-on-scroll fade-up" style="margin-bottom:var(--spacing-xl);">
+      <h3 style="font-size:1rem;font-weight:700;color:var(--color-gray-600);margin-bottom:var(--spacing-lg);letter-spacing:0.06em;text-transform:uppercase;">
+        1. Kreditart wählen
+      </h3>
+      <div class="loan-type-selector" id="loan-type-selector" role="group" aria-label="Kreditart auswählen">
+        <button class="loan-type-btn active" data-type="privatkredit" data-max="75000" data-min-months="12" data-max-months="120" data-rate="1.99">
+          <span class="type-icon">💼</span>
+          <span class="type-label">Privat­kredit</span>
+        </button>
+        <button class="loan-type-btn" data-type="immobilienkredit" data-max="1000000" data-min-months="60" data-max-months="360" data-rate="0.89">
+          <span class="type-icon">🏠</span>
+          <span class="type-label">Immobilien­kredit</span>
+        </button>
+        <button class="loan-type-btn" data-type="autokredit" data-max="100000" data-min-months="12" data-max-months="96" data-rate="2.49">
+          <span class="type-icon">🚗</span>
+          <span class="type-label">Auto­kredit</span>
+        </button>
+        <button class="loan-type-btn" data-type="hypothekendarlehen" data-max="2000000" data-min-months="60" data-max-months="480" data-rate="1.29">
+          <span class="type-icon">🏦</span>
+          <span class="type-label">Hypotheken­darlehen</span>
+        </button>
+        <button class="loan-type-btn" data-type="kreditrueckkauf" data-max="500000" data-min-months="12" data-max-months="300" data-rate="2.99">
+          <span class="type-icon">🔄</span>
+          <span class="type-label">Kredit­rückkauf</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Layout simulateur -->
+    <div class="simulator-layout animate-on-scroll fade-up delay-1">
+
+      <!-- ── PANNEAU GAUCHE : contrôles ── -->
+      <div class="simulator-controls">
+
+        <h3 style="font-size:1rem;font-weight:700;color:var(--color-gray-600);margin-bottom:var(--spacing-xl);letter-spacing:0.06em;text-transform:uppercase;">
+          2. Kreditparameter einstellen
+        </h3>
+
+        <!-- Slider montant -->
+        <div class="slider-group">
+          <div class="slider-label-row">
+            <label class="slider-label" for="amount-slider">💶 Kreditbetrag</label>
+            <div class="slider-value-display" id="amount-display">10.000 €</div>
+          </div>
+          <input
+            type="range"
+            id="amount-slider"
+            class="range-slider"
+            min="1000"
+            max="75000"
+            step="500"
+            value="10000"
+            aria-label="Kreditbetrag"
+          >
+          <div class="slider-limits">
+            <span id="amount-min-label">1.000 €</span>
+            <span id="amount-max-label">75.000 €</span>
+          </div>
+        </div>
+
+        <!-- Slider durée -->
+        <div class="slider-group">
+          <div class="slider-label-row">
+            <label class="slider-label" for="duration-slider">📅 Laufzeit</label>
+            <div class="slider-value-display" id="duration-display">36 Monate</div>
+          </div>
+          <input
+            type="range"
+            id="duration-slider"
+            class="range-slider"
+            min="12"
+            max="120"
+            step="6"
+            value="36"
+            aria-label="Laufzeit in Monaten"
+          >
+          <div class="slider-limits">
+            <span id="duration-min-label">12 Monate</span>
+            <span id="duration-max-label">120 Monate</span>
+          </div>
+        </div>
+
+        <!-- Taux d'intérêt (modifiable) -->
+        <div class="slider-group">
+          <div class="slider-label-row">
+            <label class="slider-label" for="rate-slider">📉 Zinssatz (p.a.)</label>
+            <div class="slider-value-display" id="rate-display">1,99 %</div>
+          </div>
+          <input
+            type="range"
+            id="rate-slider"
+            class="range-slider"
+            min="0.5"
+            max="15"
+            step="0.1"
+            value="1.99"
+            aria-label="Zinssatz"
+          >
+          <div class="slider-limits">
+            <span>0,5 %</span>
+            <span>15,0 %</span>
+          </div>
+        </div>
+
+        <!-- Informations sur le taux indicatif -->
+        <div class="alert alert-info" style="margin-bottom:var(--spacing-xl);font-size:var(--font-size-xs);">
+          <span>ℹ️</span>
+          <div>Der angezeigte Zinssatz ist indikativ. Ihr persönlicher Zinssatz wird nach Bonitätsprüfung individuell ermittelt.</div>
+        </div>
+
+        <!-- Décomposition capital / intérêts -->
+        <div style="margin-bottom:var(--spacing-xl);">
+          <h4 style="font-size:0.85rem;font-weight:700;color:var(--color-gray-600);margin-bottom:var(--spacing-sm);letter-spacing:0.05em;text-transform:uppercase;">
+            Zusammensetzung der Gesamtkosten
+          </h4>
+          <div class="decomposition-bar">
+            <div class="decomp-capital" id="decomp-capital" style="width:80%;"></div>
+            <div class="decomp-interest" id="decomp-interest"></div>
+          </div>
+          <div class="decomp-labels">
+            <div class="decomp-label">
+              <div class="decomp-dot-blue"></div>
+              <span>Nettokreditbetrag: <strong id="decomp-capital-pct">80%</strong></span>
+            </div>
+            <div class="decomp-label">
+              <div class="decomp-dot-gold"></div>
+              <span>Zinsen: <strong id="decomp-interest-pct">20%</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Résumé compact pour mobile -->
+        <div style="background:var(--color-bg-light);border-radius:var(--border-radius-lg);padding:var(--spacing-lg);border:1px solid var(--color-gray-200);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-md);">
+            <div style="text-align:center;">
+              <div style="font-size:0.7rem;font-weight:700;color:var(--color-gray-400);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">Kreditart</div>
+              <div style="font-weight:700;color:var(--color-primary);font-size:0.9rem;" id="summary-type">Privatkredit</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:0.7rem;font-weight:700;color:var(--color-gray-400);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">Effektivzins</div>
+              <div style="font-weight:700;color:var(--color-accent);font-size:0.9rem;" id="summary-rate">1,99 %</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /simulator-controls -->
+
+      <!-- ── PANNEAU DROIT : résultats ── -->
+      <div class="simulator-results">
+
+        <h3 style="color:rgba(255,255,255,0.6);font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:var(--spacing-xl);">
+          📊 Ergebnisse in Echtzeit
+        </h3>
+
+        <!-- Mensualité — résultat principal -->
+        <div class="result-card highlight">
+          <div class="result-label">💳 Monatliche Rate</div>
+          <div class="result-value" id="result-monthly">285,38 €</div>
+          <div class="result-sub">Feste Monatsrate über die gesamte Laufzeit</div>
+        </div>
+
+        <!-- Grille résultats secondaires -->
+        <div class="results-mini-grid">
+          <div class="result-card">
+            <div class="result-label">💶 Nettokreditbetrag</div>
+            <div class="result-value" id="result-principal" style="font-size:1.3rem;">10.000 €</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">📉 Zinssatz p.a.</div>
+            <div class="result-value" id="result-rate" style="font-size:1.3rem;">1,99 %</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">💸 Gesamtzinsen</div>
+            <div class="result-value" id="result-total-interest" style="font-size:1.3rem;">273,68 €</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">📅 Laufzeit</div>
+            <div class="result-value" id="result-duration" style="font-size:1.3rem;">36 Monate</div>
+          </div>
+        </div>
+
+        <!-- Total à rembourser -->
+        <div class="result-card" style="background:rgba(255,255,255,0.04);margin-bottom:var(--spacing-xl);">
+          <div class="result-label">💰 Gesamtbetrag (inkl. Zinsen)</div>
+          <div class="result-value" id="result-total" style="font-size:1.6rem;">10.273,68 €</div>
+          <div class="result-sub">Gesamtzahlungsbetrag über die Laufzeit</div>
+        </div>
+
+        <!-- Bouton CTA : transmettre vers formulaire -->
+        <button
+          id="btn-apply"
+          class="btn btn-white btn-full"
+          style="margin-bottom:var(--spacing-md);"
+          onclick="sendToApplication()"
+        >
+          🚀 Diesen Kredit jetzt beantragen
+        </button>
+
+        <p style="color:rgba(255,255,255,0.35);font-size:0.72rem;text-align:center;line-height:1.6;margin:0;">
+          Unverbindliche Berechnung. Repräsentatives Beispiel: Nettokreditbetrag 10.000 €,
+          Laufzeit 36 Monate, Sollzinssatz 1,99% p.a. (fest), effektiver Jahreszins 1,99%.
+          Gesamtbetrag: 10.273,68 €. Monatliche Rate: 285,38 €.
+        </p>
+
+      </div><!-- /simulator-results -->
+
+    </div><!-- /simulator-layout -->
+
+
+    <!-- ── GRAPHIQUE D'AMORTISSEMENT ── -->
+    <div class="chart-container animate-on-scroll fade-up" style="margin-top:var(--spacing-3xl);">
+
+      <h3 style="font-size:1.2rem;font-weight:700;color:var(--color-primary);margin-bottom:var(--spacing-xl);">
+        📈 Tilgungsverlauf über die Laufzeit
+      </h3>
+
+      <canvas id="amortization-chart" height="300" aria-label="Tilgungsdiagramm" role="img"></canvas>
+
+      <div class="chart-legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--color-accent);"></div>
+          <span>Tilgungsanteil (Kapital)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--color-secondary);"></div>
+          <span>Zinsanteil</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--color-gray-300);"></div>
+          <span>Restschuld</span>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ── TABLEAU RÉCAPITULATIF ── -->
+    <div class="chart-container animate-on-scroll fade-up" style="margin-top:var(--spacing-2xl);">
+
+      <h3 style="font-size:1.2rem;font-weight:700;color:var(--color-primary);margin-bottom:var(--spacing-lg);">
+        📋 Zusammenfassung
+      </h3>
+
+      <div class="table-wrapper amort-table-wrap">
+        <table id="summary-table" aria-label="Kreditzusammenfassung">
+          <thead>
+            <tr>
+              <th>Kreditart</th>
+              <th>Betrag</th>
+              <th>Laufzeit</th>
+              <th>Zinssatz</th>
+              <th>Monatliche Rate</th>
+              <th>Gesamtbetrag</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="summary-row">
+              <td id="sum-type">Privatkredit</td>
+              <td id="sum-amount">10.000 €</td>
+              <td id="sum-duration">36 Monate</td>
+              <td id="sum-rate">1,99 %</td>
+              <td id="sum-monthly"><strong style="color:var(--color-accent);">285,38 €</strong></td>
+              <td id="sum-total">10.273,68 €</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+
+    <!-- ── TABLEAU D'AMORTISSEMENT (dépliable) ── -->
+    <div class="amortization-section animate-on-scroll fade-up">
+
+      <button class="amortization-toggle" id="amortization-toggle" aria-expanded="false" aria-controls="amortization-table">
+        <span>📄 Tilgungsplan anzeigen (alle Monate)</span>
+        <span id="toggle-arrow">▼</span>
+      </button>
+
+      <div class="amortization-table-wrap" id="amortization-table" role="region" aria-label="Tilgungsplan">
+        <table aria-label="Monatlicher Tilgungsplan">
+          <thead>
+            <tr>
+              <th>Monat</th>
+              <th>Rate</th>
+              <th>Tilgung</th>
+              <th>Zinsen</th>
+              <th>Restschuld</th>
+            </tr>
+          </thead>
+          <tbody id="amortization-tbody">
+            <!-- Généré dynamiquement par JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div><!-- /container -->
+</section>
+
+
+<!-- ══ CTA FOOTER ════════════════════════════════════════════ -->
+<section style="background:var(--color-bg-light);padding:var(--spacing-3xl) 0;" aria-label="Weitere Optionen">
+  <div class="container">
+    <div class="cta-cards-grid animate-on-scroll fade-up">
+      <div style="background:white;padding:var(--spacing-xl);border-radius:var(--border-radius-xl);box-shadow:var(--shadow-sm);">
+        <div style="font-size:2rem;margin-bottom:var(--spacing-md);">📋</div>
+        <h4 style="color:var(--color-primary);margin-bottom:var(--spacing-sm);">Details ansehen</h4>
+        <p style="font-size:var(--font-size-sm);color:var(--color-gray-500);margin-bottom:var(--spacing-lg);">Alle Konditionen und Voraussetzungen im Überblick</p>
+        <a href="leistungen.html" class="btn btn-outline btn-sm">Zu den Leistungen</a>
+      </div>
+      <div style="background:var(--color-primary);padding:var(--spacing-xl);border-radius:var(--border-radius-xl);box-shadow:var(--shadow-lg);">
+        <div style="font-size:2rem;margin-bottom:var(--spacing-md);">🚀</div>
+        <h4 style="color:white;margin-bottom:var(--spacing-sm);">Jetzt beantragen</h4>
+        <p style="font-size:var(--font-size-sm);color:rgba(255,255,255,0.65);margin-bottom:var(--spacing-lg);">In 5 Minuten Ihren Antrag online stellen</p>
+        <a href="beantragen.html" id="hero-apply-btn" class="btn btn-primary btn-sm">Antrag starten</a>
+      </div>
+      <div style="background:white;padding:var(--spacing-xl);border-radius:var(--border-radius-xl);box-shadow:var(--shadow-sm);">
+        <div style="font-size:2rem;margin-bottom:var(--spacing-md);">📞</div>
+        <h4 style="color:var(--color-primary);margin-bottom:var(--spacing-sm);">Persönlich beraten lassen</h4>
+        <p style="font-size:var(--font-size-sm);color:var(--color-gray-500);margin-bottom:var(--spacing-lg);">Mo–Fr 08:00–20:00 Uhr kostenlos</p>
+        <a href="kontakt.html" class="btn btn-outline btn-sm">Kontakt aufnehmen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ═════════════════════════════════════════════════ -->
+<button id="scroll-to-top" aria-label="Nach oben" style="position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--color-accent),var(--color-secondary-dark));color:white;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(30,58,138,0.4);z-index:900;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.2s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">↑</button>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-main">
+    <div class="container">
+      <div class="footer-grid">
+
+        <!-- Bloc 1 : Marque -->
+        <div class="footer-brand">
+          <a href="index.html" class="logo" style="margin-bottom:var(--spacing-md);">
+            <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="180" height="36">
+          </a>
+          <p>Ihr verlässlicher Partner für transparente, schnelle und günstige Kredite. BaFin-reguliert, DSGVO-konform, seit 2010.</p>
+          <div class="footer-certs">
+            <div class="cert-badge">🏛️ BaFin</div>
+            <div class="cert-badge">🔒 DSGVO</div>
+            <div class="cert-badge">⭐ SCHUFA</div>
+          </div>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Bloc 2 : Navigation + Contact -->
+        <div>
+          <h3 class="footer-heading">Navigation</h3>
+          <nav class="footer-links" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;">
+            <a href="index.html"      class="footer-link">Startseite</a>
+            <a href="leistungen.html" class="footer-link">Leistungen</a>
+            <a href="simulation.html" class="footer-link">Kreditrechner</a>
+            <a href="ueber-uns.html"  class="footer-link">Über uns</a>
+            <a href="kontakt.html"    class="footer-link">Kontakt</a>
+            <a href="beantragen.html" class="footer-link">Beantragen</a>
+            <a href="login.html"      class="footer-link">Mein Konto</a>
+          </nav>
+          <h3 class="footer-heading" style="margin-top:var(--spacing-lg);">Kontakt</h3>
+          <div class="footer-contact-item"><span class="footer-contact-icon">📍</span><div>Friedrichstraße 100, 10117 Berlin</div></div>
+          <div class="footer-contact-item"><span class="footer-contact-icon">📞</span><div><a href="tel:+493012345678" style="color:rgba(255,255,255,0.6);">+49 30 123 456 78</a></div></div>
+          <div class="footer-contact-item"><span class="footer-contact-icon">✉️</span><div><a href="mailto:stephaniebonneville01@gmail.com" style="color:rgba(255,255,255,0.6);">stephaniebonneville01@gmail.com</a></div></div>
+        </div>
+
+        <!-- Bloc 3 : Crédits -->
+        <div>
+          <h3 class="footer-heading">Unsere Kredite</h3>
+          <nav class="footer-links">
+            <a href="leistungen.html#privatkredit"       class="footer-link">💼 Privatkredit</a>
+            <a href="leistungen.html#immobilienkredit"   class="footer-link">🏠 Immobilienkredit</a>
+            <a href="leistungen.html#autokredit"         class="footer-link">🚗 Autokredit</a>
+            <a href="leistungen.html#hypothekendarlehen" class="footer-link">🏦 Hypothekendarlehen</a>
+            <a href="leistungen.html#kreditrueckkauf"    class="footer-link">🔄 Kreditrückkauf</a>
+          </nav>
+        </div>
+
+        <!-- Bloc 4 : Légal -->
+        <div>
+          <h3 class="footer-heading">Rechtliches</h3>
+          <nav class="footer-links">
+            <a href="impressum.html"     class="footer-link">Impressum</a>
+            <a href="datenschutz.html"   class="footer-link">Datenschutz</a>
+            <a href="agb.html"           class="footer-link">AGB</a>
+            <a href="cookie-richtlinie.html" class="footer-link">Cookie-Richtlinie</a>
+          </nav>
+          <div style="margin-top:var(--spacing-lg);padding:var(--spacing-md);background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:var(--border-radius-md);">
+            <p style="font-size:10px;color:rgba(255,255,255,0.45);margin:0;line-height:1.6;">
+              ⚠️ Kreditvermittlung unterliegt der BaFin-Aufsicht. Bonität wird geprüft. Keine Kreditgewährung ohne Bonitätsprüfung.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="footer-bottom-inner">
+        <p>&copy; <span id="footer-year">2024</span> KreditProfi Deutschland GmbH. Alle Rechte vorbehalten.</p>
+        <div class="footer-legal-links">
+          <a href="impressum.html">Impressum</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="agb.html">AGB</a>
+          <a href="cookie-richtlinie.html">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
+<script src="assets/js/loader.js"></script>
+<script src="assets/js/cookie-consent.js"></script>
+<script src="assets/js/config.js"></script>
+<script defer src="assets/js/ui.js"></script>
+<script defer src="assets/js/animations.js"></script>
+<script defer src="assets/js/simulator.js"></script>
+
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+  document.addEventListener('DOMContentLoaded', () => { window.UI?.updateNavAuth(); });
+</script>
+
+<script src="assets/js/sw-register.js"></script>
+</body>
+</html>

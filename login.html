@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<style id="critical-css">
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden;scroll-behavior:smooth}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  #page-loader{position:fixed;inset:0;z-index:99999;background:#0B1D3A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .45s ease,visibility .45s ease}
+  #page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .loader-logo{display:flex;align-items:center;gap:12px}
+  .loader-logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#D4A843,#b5882a);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .loader-logo-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff}
+  .loader-logo-text span{display:block;font-size:.65rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .loader-spinner-wrap{position:relative;width:56px;height:56px}
+  .loader-spinner{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.08);border-top-color:#D4A843;border-right-color:rgba(212,168,67,.4);animation:spin .9s cubic-bezier(.45,.05,.55,.95) infinite}
+  .loader-spinner-inner{position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,255,255,.04);border-bottom-color:rgba(212,168,67,.6);animation:spin 1.4s cubic-bezier(.45,.05,.55,.95) infinite reverse}
+  .loader-progress-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .loader-progress-fill{height:100%;background:linear-gradient(90deg,#D4A843,#e8c96a,#D4A843);background-size:200% 100%;border-radius:99px;animation:prog 1.2s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes prog{0%{background-position:200% 0;width:20%}50%{background-position:0% 0;width:80%}100%{background-position:-200% 0;width:100%}}
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center}
+</style>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#D4A843">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Anmelden bei KreditProfi Deutschland – Zugang zu Ihrem Kundenkonto.">
+  <title>Anmelden — KreditProfi Deutschland</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Melden Sie sich in Ihrem KreditProfi-Konto an, um Ihren Antragsstatus einzusehen und Dokumente hochzuladen.">
+  <meta name="keywords" content="">
+  <meta name="author" content="KreditProfi Deutschland GmbH">
+  <meta name="robots" content="index, follow">
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="Anmelden — KreditProfi Deutschland">
+  <meta property="og:description" content="Melden Sie sich in Ihrem KreditProfi-Konto an, um Ihren Antragsstatus einzusehen und Dokumente hochzuladen.">
+  <meta property="og:url"         content="https://kreditprofi-deutschland.onrender.com/login.html">
+  <meta property="og:site_name"   content="KreditProfi Deutschland">
+  <meta property="og:locale"      content="de_DE">
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary">
+  <meta name="twitter:title"       content="Anmelden — KreditProfi Deutschland">
+  <meta name="twitter:description" content="Melden Sie sich in Ihrem KreditProfi-Konto an, um Ihren Antragsstatus einzusehen und Dokumente hochzuladen.">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/cookie-consent.css">
+  <link rel="stylesheet" href="assets/css/loader.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .login-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Côté gauche : image + branding */
+    .login-left {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-4xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-left::before {
+      content: '';
+      position: absolute;
+      top: -150px; right: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 60%);
+      border-radius: 50%;
+    }
+
+    .login-left-content { position: relative; z-index: 1; text-align: center; }
+
+    .login-left-logo { margin-bottom: var(--spacing-3xl); }
+
+    .login-feature-list { list-style: none; text-align: left; }
+    .login-feature-list li {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      color: rgba(255,255,255,0.75);
+      font-size: var(--font-size-sm);
+      padding: var(--spacing-sm) 0;
+    }
+    .login-feature-list li::before {
+      content: '✓';
+      width: 22px; height: 22px; min-width: 22px;
+      background: rgba(201,168,76,0.2);
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: var(--color-secondary);
+    }
+
+    /* Côté droit : formulaire */
+    .login-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-3xl) var(--spacing-4xl);
+      background: var(--color-white);
+    }
+
+    .login-form-wrap { width: 100%; max-width: 420px; }
+
+    .login-form-wrap h1 {
+      font-size: var(--font-size-3xl);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .login-form-wrap p.subtitle {
+      color: var(--color-gray-500);
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    /* Admin login badge */
+    .admin-hint {
+      background: rgba(30,58,138,0.06);
+      border: 1px solid rgba(30,58,138,0.15);
+      border-radius: var(--border-radius-lg);
+      padding: 12px 16px;
+      font-size: var(--font-size-xs);
+      color: var(--color-accent);
+      margin-bottom: var(--spacing-xl);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .login-page  { grid-template-columns: 1fr; }
+      .login-left  { display: none; }
+      .login-right { padding: var(--spacing-2xl) var(--spacing-xl); min-height: 100vh; }
+      .login-card  { max-width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .login-right { padding: var(--spacing-xl) var(--spacing-lg); }
+      .login-card  { padding: var(--spacing-xl); }
+      .login-header h1 { font-size: var(--font-size-2xl); }
+      .login-tabs  { margin-bottom: var(--spacing-lg); }
+      .login-tab   { padding: 10px var(--spacing-md); font-size: var(--font-size-sm); }
+      .login-form-actions { flex-direction: column; gap: var(--spacing-sm); align-items: flex-start; }
+      .login-submit { width: 100%; }
+      .divider-or   { margin: var(--spacing-lg) 0; }
+      .social-login { flex-direction: column; }
+      .social-btn   { width: 100%; justify-content: center; }
+    }
+
+    @media (max-width: 375px) {
+      .login-right { padding: var(--spacing-lg) var(--spacing-md); }
+      .login-header h1 { font-size: var(--font-size-xl); }
+    }
+  </style>
+
+</head>
+<body>
+<script>
+(function(){
+  // Retour navigateur (bfcache) : enlève tout masquage résiduel instantanément
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted){
+      document.body.style.visibility = '';
+      document.body.style.opacity = '';
+      document.body.classList.remove('css-loading');
+      var l = document.getElementById('page-loader');
+      if(l){ l.style.opacity='0'; l.style.visibility='hidden'; if(l.parentNode) l.parentNode.removeChild(l); }
+    }
+  });
+})();
+</script>
+
+<div class="login-page">
+
+  <!-- ── CÔTÉ GAUCHE ── -->
+  <div class="login-left">
+    <div class="login-left-content">
+      <div class="login-left-logo">
+        <a href="index.html" class="logo" aria-label="KreditProfi Deutschland">
+          <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="200" height="40">
+        </a>
+      </div>
+      <h2 style="color:white;font-size:1.8rem;margin-bottom:var(--spacing-lg);">
+        Willkommen zurück!
+      </h2>
+      <p style="color:rgba(255,255,255,0.65);font-size:var(--font-size-sm);margin-bottom:var(--spacing-2xl);max-width:360px;">
+        Melden Sie sich an, um Ihren Kreditantrag zu verfolgen, Dokumente hochzuladen und Ihre persönlichen Daten zu verwalten.
+      </p>
+      <ul class="login-feature-list">
+        <li>Status Ihres Kreditantrags in Echtzeit</li>
+        <li>Sichere Dokumentenübermittlung</li>
+        <li>Persönliche Benachrichtigungen</li>
+        <li>Vollständiger Antragshistorie</li>
+      </ul>
+      <div style="margin-top:var(--spacing-3xl);padding-top:var(--spacing-xl);border-top:1px solid rgba(255,255,255,0.1);">
+        <p style="color:rgba(255,255,255,0.4);font-size:var(--font-size-xs);">
+          🔒 256-Bit SSL-verschlüsselt &nbsp;|&nbsp; 🏛️ BaFin-reguliert &nbsp;|&nbsp; 🇩🇪 Server in Deutschland
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CÔTÉ DROIT : formulaire ── -->
+  <div class="login-right">
+    <div class="login-form-wrap">
+
+      <!-- Logo visible sur mobile uniquement -->
+      <div style="display:none;" class="show-mobile" style="margin-bottom:var(--spacing-2xl);text-align:center;">
+        <a href="index.html" class="logo" style="justify-content:center;margin-bottom:1.5rem;">
+          <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="200" height="40">
+        </a>
+      </div>
+
+      <h1 style="color:var(--color-primary);">Anmelden</h1>
+      <p class="subtitle">Geben Sie Ihre Zugangsdaten ein.</p>
+
+      <!-- Message statut -->
+      <div id="login-status" class="form-status" role="alert" aria-live="polite"></div>
+
+      <form id="login-form" novalidate>
+
+        <div class="form-group">
+          <label class="form-label" for="login-email">E-Mail-Adresse</label>
+          <input type="email" id="login-email" name="email" class="form-control"
+            placeholder="max@example.de" required autocomplete="email" autofocus>
+          <span class="form-error" id="err-login-email"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">
+            Passwort
+            <a href="#forgot" id="forgot-link" style="float:right;font-size:var(--font-size-xs);font-weight:500;color:var(--color-accent);">Passwort vergessen?</a>
+          </label>
+          <div style="position:relative;">
+            <input type="password" id="login-password" name="password" class="form-control"
+              placeholder="Ihr Passwort" required autocomplete="current-password" style="padding-right:48px;">
+            <button type="button" id="toggle-pwd"
+              style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-gray-400);"
+              aria-label="Passwort anzeigen">👁</button>
+          </div>
+          <span class="form-error" id="err-login-password"></span>
+        </div>
+
+        <div style="margin-bottom:var(--spacing-xl);">
+          <label class="form-check" for="remember-me">
+            <input type="checkbox" id="remember-me" name="remember">
+            <div class="form-check-custom"></div>
+            <span class="form-check-label">Angemeldet bleiben</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="login-btn">
+          <span id="login-btn-label">🔐 Anmelden</span>
+        </button>
+
+      </form>
+
+      <p style="text-align:center;margin-top:var(--spacing-xl);font-size:var(--font-size-sm);color:var(--color-gray-500);">
+        Noch kein Konto?
+        <a href="beantragen.html" style="font-weight:700;color:var(--color-accent);">Jetzt beantragen →</a>
+        <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);font-size:0.7rem;color:rgba(255,255,255,0.35);line-height:1.8;text-align:center;">🔒 SSL-verschlüsselt &nbsp;•&nbsp; 🏛️ BaFin &nbsp;•&nbsp; 📋 DSGVO</div>
+      </p>
+
+      <div style="margin-top:var(--spacing-3xl);padding-top:var(--spacing-xl);border-top:1px solid var(--color-gray-200);text-align:center;">
+        <a href="admin.html" style="font-size:var(--font-size-xs);color:var(--color-gray-400);">Admin-Bereich →</a>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /login-page -->
+
+<script src="assets/js/loader.js"></script>
+<script src="assets/js/cookie-consent.js"></script>
+<script src="assets/js/config.js"></script>
+<script defer src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Rediriger si déjà connecté
+    if (window.KP?.isLoggedIn()) {
+      window.location.href = 'mein-konto.html';
+      return;
+    }
+
+    // Toggle visibilité mot de passe
+    document.getElementById('toggle-pwd')?.addEventListener('click', () => {
+      const input = document.getElementById('login-password');
+      const btn   = document.getElementById('toggle-pwd');
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+      }
+    });
+
+    // Soumission du formulaire de connexion
+    document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email    = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const status   = document.getElementById('login-status');
+      const btn      = document.getElementById('login-btn');
+      const btnLabel = document.getElementById('login-btn-label');
+
+      // Validation basique
+      let valid = true;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('err-login-email').textContent = 'Bitte geben Sie eine gültige E-Mail ein.';
+        valid = false;
+      }
+      if (!password) {
+        document.getElementById('err-login-password').textContent = 'Bitte geben Sie Ihr Passwort ein.';
+        valid = false;
+      }
+      if (!valid) return;
+
+      btn.disabled = true;
+      btnLabel.textContent = 'Anmeldung läuft...';
+
+      try {
+        const data = await window.API.auth.login(email, password);
+
+        if (data.token) {
+          // "Angemeldet bleiben" : si coché, stocker aussi dans sessionStorage pour la durée
+          // Le token JWT reste valide 7 jours dans tous les cas (géré côté serveur)
+          const rememberMe = document.getElementById('remember-me')?.checked;
+          localStorage.setItem(window.KP?.JWT_KEY   || 'kreditprofi_token', data.token);
+          localStorage.setItem(window.KP?.USER_KEY  || 'kreditprofi_user', JSON.stringify(data.user));
+          if (!rememberMe) {
+            // Sans "remember me" : marquer pour suppression à la fermeture de session
+            sessionStorage.setItem('kp_session_only', '1');
+          } else {
+            sessionStorage.removeItem('kp_session_only');
+          }
+          // Redirection selon le rôle
+          // Si email non vérifié → stocker un flag pour afficher un avertissement dans mein-konto
+          if (data.user && data.user.emailVerified === false) {
+            sessionStorage.setItem('kp_email_unverified', '1');
+          }
+          window.location.href = data.user?.role === 'admin' ? 'admin.html' : 'mein-konto.html';
+        } else {
+          throw new Error('Kein Token erhalten.');
+        }
+      } catch (err) {
+        status.className = 'form-status error';
+        status.innerHTML = `❌ ${err.message || 'Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.'}`;
+      } finally {
+        btn.disabled = false;
+        btnLabel.textContent = '🔐 Anmelden';
+      }
+    });
+
+  });
+</script>
+<!-- ══ MODAL MOT DE PASSE OUBLIÉ ════════════════════════════ -->
+<div id="forgot-modal" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="forgot-title">
+  <div class="modal" style="max-width:min(460px,100%);">
+    <div class="modal-header">
+      <h3 id="forgot-title" style="margin:0;font-size:var(--font-size-xl);">🔐 Passwort vergessen?</h3>
+      <button onclick="document.getElementById('forgot-modal').style.display='none'"
+        style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--color-gray-500);" aria-label="Schließen">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--color-gray-600);font-size:var(--font-size-sm);margin-bottom:var(--spacing-lg);">
+        Geben Sie Ihre E-Mail-Adresse ein. Wir senden Ihnen ein temporäres Passwort zu.
+      </p>
+      <div class="form-group">
+        <label class="form-label" for="forgot-email">E-Mail-Adresse</label>
+        <input type="email" id="forgot-email" class="form-control" placeholder="ihre@email.de" autocomplete="email">
+        <div id="err-forgot" style="color:var(--color-error);font-size:var(--font-size-xs);margin-top:4px;"></div>
+      </div>
+      <div id="forgot-success" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;color:#166534;font-size:var(--font-size-sm);margin-top:var(--spacing-md);">
+        ✅ E-Mail gesendet (falls das Konto existiert). Bitte prüfen Sie Ihr Postfach.
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;gap:var(--spacing-md);">
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('forgot-modal').style.display='none'">Abbrechen</button>
+      <button class="btn btn-primary btn-sm" id="forgot-submit-btn" onclick="submitForgotPassword()">
+        <span id="forgot-btn-label">Passwort zurücksetzen</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Ouvrir le modal mot de passe oublié
+document.getElementById('forgot-link')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('forgot-email').value = document.getElementById('login-email')?.value || '';
+  document.getElementById('err-forgot').textContent = '';
+  document.getElementById('forgot-success').style.display = 'none';
+  document.getElementById('forgot-modal').style.display = 'flex';
+  setTimeout(() => document.getElementById('forgot-email').focus(), 100);
+});
+
+// Fermer avec Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.getElementById('forgot-modal').style.display = 'none';
+});
+
+// Soumettre la demande
+async function submitForgotPassword() {
+  const email   = document.getElementById('forgot-email').value.trim();
+  const errEl   = document.getElementById('err-forgot');
+  const btn     = document.getElementById('forgot-submit-btn');
+  const label   = document.getElementById('forgot-btn-label');
+  const success = document.getElementById('forgot-success');
+
+  errEl.textContent = '';
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
+    return;
+  }
+
+  btn.disabled = true;
+  label.textContent = 'Wird gesendet...';
+
+  try {
+    await window.API.auth.forgotPassword(email);
+  } catch (err) {
+    // On affiche quand même le succès (sécurité anti-énumération)
+    console.warn('Forgot password request:', err.message);
+  } finally {
+    // Toujours afficher le message de succès (sécurité : ne pas révéler si l'email existe)
+    success.style.display = 'block';
+    btn.disabled = false;
+    label.textContent = 'Passwort zurücksetzen';
+  }
+}
+</script>
+
+</body>
+</html>

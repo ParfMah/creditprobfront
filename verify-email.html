@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>E-Mail bestätigen — KreditProfi Deutschland</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .verify-page {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background:
+        linear-gradient(135deg, rgba(5,150,105,0.88) 0%, rgba(11,29,58,0.95) 60%, rgba(11,29,58,0.97) 100%),
+        url('https://images.unsplash.com/photo-1563986768494-4747a2926391?w=1920&q=60&fm=webp') center/cover no-repeat;
+      padding: var(--spacing-xl);
+    }
+    .verify-card {
+      background: white; border-radius: var(--border-radius-2xl);
+      padding: var(--spacing-3xl); width: 100%; max-width: 440px;
+      box-shadow: var(--shadow-xl); text-align: center;
+    }
+    .verify-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; margin: 0 auto var(--spacing-xl);
+    }
+    @media (max-width: 480px) { .verify-card { padding: var(--spacing-xl); } }
+  </style>
+</head>
+<body>
+
+<div class="verify-page">
+  <div class="verify-card">
+
+    <!-- Loading -->
+    <div id="state-loading">
+      <div class="verify-icon" style="background:rgba(26,79,168,0.1);">⏳</div>
+      <h2 style="color:var(--color-primary);margin-bottom:var(--spacing-md);">E-Mail wird bestätigt…</h2>
+      <p style="color:var(--color-gray-500);">Einen Moment bitte.</p>
+    </div>
+
+    <!-- Succès -->
+    <div id="state-success" style="display:none;">
+      <div class="verify-icon" style="background:rgba(5,150,105,0.12);">✅</div>
+      <h2 style="color:var(--color-success);margin-bottom:var(--spacing-md);">E-Mail bestätigt!</h2>
+      <p style="color:var(--color-gray-600);margin-bottom:var(--spacing-2xl);">
+        Ihre E-Mail-Adresse wurde erfolgreich bestätigt.<br>
+        Ihr Konto ist jetzt vollständig aktiviert.
+      </p>
+      <a href="mein-konto.html" class="btn btn-primary btn-full">Zu meinem Konto →</a>
+      <p style="margin-top:var(--spacing-md);">
+        <a href="beantragen.html" class="btn btn-outline btn-full">Kredit beantragen</a>
+      </p>
+    </div>
+
+    <!-- Erreur -->
+    <div id="state-error" style="display:none;">
+      <div class="verify-icon" style="background:rgba(239,68,68,0.1);">❌</div>
+      <h2 style="color:var(--color-error);margin-bottom:var(--spacing-md);">Link ungültig</h2>
+      <p style="color:var(--color-gray-600);margin-bottom:var(--spacing-xl);" id="error-msg">
+        Dieser Bestätigungslink ist nicht mehr gültig oder abgelaufen.
+      </p>
+      <button class="btn btn-outline btn-full" id="resend-btn" onclick="resendVerification()">
+        <span id="resend-label">📧 Neuen Link anfordern</span>
+      </button>
+      <p style="margin-top:var(--spacing-lg);">
+        <a href="login.html" style="color:var(--color-accent);font-size:var(--font-size-sm);">← Zur Anmeldung</a>
+      </p>
+    </div>
+
+    <!-- Déjà vérifié -->
+    <div id="state-already" style="display:none;">
+      <div class="verify-icon" style="background:rgba(212,168,67,0.12);">⭐</div>
+      <h2 style="color:var(--color-primary);margin-bottom:var(--spacing-md);">Bereits bestätigt</h2>
+      <p style="color:var(--color-gray-600);margin-bottom:var(--spacing-2xl);">
+        Ihre E-Mail-Adresse ist bereits verifiziert. Alles gut!
+      </p>
+      <a href="mein-konto.html" class="btn btn-primary btn-full">Zu meinem Konto →</a>
+    </div>
+
+    <!-- Logo bas de page -->
+    <div style="margin-top:var(--spacing-2xl);padding-top:var(--spacing-xl);border-top:1px solid var(--color-gray-100);">
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;">
+        <div style="width:28px;height:28px;background:linear-gradient(135deg,var(--color-secondary-dark),var(--color-secondary));border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;">💰</div>
+        <span style="font-family:var(--font-heading);font-weight:800;font-size:0.9rem;color:var(--color-primary);">KreditProfi Deutschland</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api.js"></script>
+<script>
+  function showState(id) {
+    ['loading','success','error','already'].forEach(s => {
+      document.getElementById('state-' + s).style.display = s === id ? 'block' : 'none';
+    });
+  }
+
+  async function resendVerification() {
+    const btn = document.getElementById('resend-btn');
+    const label = document.getElementById('resend-label');
+    if (!window.KP?.isLoggedIn()) {
+      window.location.href = 'login.html';
+      return;
+    }
+    btn.disabled = true;
+    label.textContent = 'Wird gesendet…';
+    try {
+      await window.API.auth.resendVerification();
+      label.textContent = '✓ E-Mail gesendet! Bitte prüfen Sie Ihren Posteingang.';
+    } catch (err) {
+      label.textContent = err.message || 'Fehler. Bitte erneut versuchen.';
+      btn.disabled = false;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const params = new URLSearchParams(window.location.search);
+    const token  = params.get('token');
+
+    if (!token) {
+      showState('error');
+      document.getElementById('error-msg').textContent = 'Kein Token vorhanden. Bitte nutzen Sie den Link aus Ihrer E-Mail.';
+      return;
+    }
+
+    try {
+      await window.API.auth.verifyEmail(token);
+      showState('success');
+    } catch (err) {
+      if (err.message && err.message.toLowerCase().includes('bereits')) {
+        showState('already');
+      } else {
+        showState('error');
+        document.getElementById('error-msg').textContent = err.message || 'Der Link ist ungültig oder abgelaufen.';
+      }
+    }
+  });
+</script>
+</body>
+</html>

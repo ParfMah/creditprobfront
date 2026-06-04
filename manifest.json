@@ -1,0 +1,52 @@
+{
+  "name": "KreditProfi Deutschland",
+  "short_name": "KreditProfi",
+  "description": "Günstige Kredite online beantragen — BaFin-reguliert, ab 1,99% p.a.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0B1D3A",
+  "theme_color": "#D4A843",
+  "lang": "de",
+  "dir": "ltr",
+  "categories": ["finance", "business"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Kredit beantragen",
+      "short_name": "Beantragen",
+      "description": "Jetzt Kredit online beantragen",
+      "url": "/beantragen.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Kreditrechner",
+      "short_name": "Rechner",
+      "description": "Monatliche Rate berechnen",
+      "url": "/simulation.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Mein Konto",
+      "short_name": "Konto",
+      "description": "Zum persönlichen Bereich",
+      "url": "/mein-konto.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

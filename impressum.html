@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<style id="critical-css">
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden;scroll-behavior:smooth}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  #page-loader{position:fixed;inset:0;z-index:99999;background:#0B1D3A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .45s ease,visibility .45s ease}
+  #page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .loader-logo{display:flex;align-items:center;gap:12px}
+  .loader-logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#D4A843,#b5882a);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .loader-logo-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff}
+  .loader-logo-text span{display:block;font-size:.65rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .loader-spinner-wrap{position:relative;width:56px;height:56px}
+  .loader-spinner{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.08);border-top-color:#D4A843;border-right-color:rgba(212,168,67,.4);animation:spin .9s cubic-bezier(.45,.05,.55,.95) infinite}
+  .loader-spinner-inner{position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,255,255,.04);border-bottom-color:rgba(212,168,67,.6);animation:spin 1.4s cubic-bezier(.45,.05,.55,.95) infinite reverse}
+  .loader-progress-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .loader-progress-fill{height:100%;background:linear-gradient(90deg,#D4A843,#e8c96a,#D4A843);background-size:200% 100%;border-radius:99px;animation:prog 1.2s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes prog{0%{background-position:200% 0;width:20%}50%{background-position:0% 0;width:80%}100%{background-position:-200% 0;width:100%}}
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center}
+</style>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#D4A843">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Impressum — KreditProfi Deutschland</title>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/cookie-consent.css">
+  <link rel="stylesheet" href="assets/css/loader.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .legal-page { padding-top: var(--header-height); }
+    .legal-banner {
+      background: linear-gradient(135deg, #0B1D3A 0%, #1A4FA8 60%, #0B1D3A 100%);
+      padding: 4rem 0 3rem;
+      text-align: center;
+    }
+    .legal-banner h1 { color: white; font-size: 2.2rem; margin-bottom: .75rem; }
+    .legal-banner p  { color: rgba(255,255,255,.65); font-size: .9rem; }
+    .legal-content {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 3rem var(--spacing-xl);
+    }
+    .legal-content h2 {
+      font-size: 1.35rem;
+      color: var(--color-primary);
+      margin: 2.5rem 0 .75rem;
+      padding-bottom: .4rem;
+      border-bottom: 2px solid rgba(212,168,67,.3);
+    }
+    .legal-content h3 {
+      font-size: 1.05rem;
+      color: var(--color-primary);
+      margin: 1.5rem 0 .5rem;
+    }
+    .legal-content p, .legal-content li {
+      font-size: .9rem;
+      color: var(--color-gray-600);
+      line-height: 1.8;
+    }
+    .legal-content ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+    .legal-content a  { color: var(--color-accent); }
+    .legal-update {
+      display: inline-block;
+      background: rgba(212,168,67,.1);
+      border: 1px solid rgba(212,168,67,.3);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: .78rem;
+      color: var(--color-secondary-dark);
+      margin-bottom: 2rem;
+    }
+    .legal-box {
+      background: #f0f5ff;
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .legal-box p { margin: 0; }
+  </style>
+
+</head>
+<body>
+<script>
+(function(){
+  // Retour navigateur (bfcache) : enlève tout masquage résiduel instantanément
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted){
+      document.body.style.visibility = '';
+      document.body.style.opacity = '';
+      document.body.classList.remove('css-loading');
+      var l = document.getElementById('page-loader');
+      if(l){ l.style.opacity='0'; l.style.visibility='hidden'; if(l.parentNode) l.parentNode.removeChild(l); }
+    }
+  });
+})();
+</script>
+<header id="site-header" class="site-header header-light" role="banner">
+  <nav class="navbar" aria-label="Hauptnavigation">
+    <a href="index.html" class="logo" aria-label="KreditProfi Deutschland">
+      <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="200" height="40">
+    </a>
+    <div class="nav-links">
+      <a href="index.html"      class="nav-link">Startseite</a>
+      <a href="leistungen.html" class="nav-link">Leistungen</a>
+      <a href="simulation.html" class="nav-link">Kreditrechner</a>
+      <a href="ueber-uns.html"  class="nav-link">Über uns</a>
+      <a href="kontakt.html"    class="nav-link">Kontakt</a>
+    </div>
+    <div class="nav-actions">
+      <a href="beantragen.html" class="btn btn-primary btn-sm">Jetzt beantragen</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+<nav id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile Navigation">
+  <a href="index.html"      class="mobile-nav-link">Startseite</a>
+  <a href="leistungen.html" class="mobile-nav-link">Leistungen</a>
+  <a href="simulation.html" class="mobile-nav-link">Kreditrechner</a>
+  <a href="ueber-uns.html"  class="mobile-nav-link">Über uns</a>
+  <a href="kontakt.html"    class="mobile-nav-link">Kontakt</a>
+  <a href="beantragen.html" class="btn btn-primary" style="margin-top:1rem;">Jetzt beantragen</a>
+</nav>
+<main class="legal-page">
+  <div class="legal-banner">
+    <h1>Impressum</h1>
+    <p>Pflichtangaben gemäß § 5 TMG</p>
+  </div>
+  <div class="legal-content">
+    <div class="legal-update">Stand: Januar 2025</div>
+
+    <h2>Angaben gemäß § 5 TMG</h2>
+    <p><strong>KreditProfi Deutschland GmbH</strong><br>
+    Friedrichstraße 100<br>10117 Berlin<br>Deutschland</p>
+
+    <h2>Kontakt</h2>
+    <p>📞 Telefon: <a href="tel:+493012345678">+49 30 123 456 78</a><br>
+    ✉️ E-Mail: <a href="mailto:stephaniebonneville01@gmail.com">stephaniebonneville01@gmail.com</a></p>
+
+    <h2>Handelsregister</h2>
+    <p>Registergericht: Amtsgericht Berlin-Charlottenburg<br>
+    Registernummer: HRB 210457 B<br>
+    Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE 298 765 432</p>
+
+    <h2>Geschäftsführung</h2>
+    <p>KreditProfi Geschäftsführung</p>
+
+    <h2>Aufsichtsbehörde</h2>
+    <p>KreditProfi Deutschland GmbH ist als Kreditvermittler bei der<br>
+    <strong>Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)</strong> registriert.<br>
+    Graurheindorfer Str. 108, 53117 Bonn<br>
+    <a href="https://www.bafin.de" target="_blank" rel="noopener">www.bafin.de</a></p>
+
+    <h2>Streitschlichtung</h2>
+    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:<br>
+    <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr</a></p>
+    <p>Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+    <h2>Haftungsausschluss</h2>
+    <h3>Haftung für Inhalte</h3>
+    <p>Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.</p>
+
+    <h3>Haftung für Links</h3>
+    <p>Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.</p>
+
+    <h3>Urheberrecht</h3>
+    <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+  </div>
+</main>
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-main"><div class="container"><div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo" style="margin-bottom:var(--spacing-md);">
+        <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="200" height="40">
+      </a>
+      <p>Ihr verlässlicher Partner für transparente, schnelle und günstige Kredite. BaFin-reguliert, DSGVO-konform, seit 2010.</p>
+      <div class="footer-certs">
+        <div class="cert-badge">🏛️ BaFin</div>
+        <div class="cert-badge">🔒 DSGVO</div>
+        <div class="cert-badge">⭐ SCHUFA</div>
+      </div>
+    </div>
+    <div>
+      <h3 class="footer-heading">Navigation</h3>
+      <nav class="footer-links" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;">
+        <a href="index.html"      class="footer-link">Startseite</a>
+        <a href="leistungen.html" class="footer-link">Leistungen</a>
+        <a href="simulation.html" class="footer-link">Kreditrechner</a>
+        <a href="ueber-uns.html"  class="footer-link">Über uns</a>
+        <a href="kontakt.html"    class="footer-link">Kontakt</a>
+        <a href="beantragen.html" class="footer-link">Beantragen</a>
+      </nav>
+    </div>
+    <div>
+      <h3 class="footer-heading">Unsere Kredite</h3>
+      <nav class="footer-links">
+        <a href="leistungen.html#privatkredit"     class="footer-link">💼 Privatkredit</a>
+        <a href="leistungen.html#immobilienkredit" class="footer-link">🏠 Immobilienkredit</a>
+        <a href="leistungen.html#autokredit"       class="footer-link">🚗 Autokredit</a>
+        <a href="leistungen.html#kreditrueckkauf"  class="footer-link">🔄 Kreditrückkauf</a>
+      </nav>
+    </div>
+    <div>
+      <h3 class="footer-heading">Rechtliches</h3>
+      <nav class="footer-links">
+        <a href="impressum.html"         class="footer-link">Impressum</a>
+        <a href="datenschutz.html"       class="footer-link">Datenschutz</a>
+        <a href="agb.html"               class="footer-link">AGB</a>
+        <a href="cookie-richtlinie.html" class="footer-link">Cookie-Richtlinie</a>
+      </nav>
+    </div>
+  </div></div></div>
+  <div class="footer-bottom"><div class="container"><div class="footer-bottom-inner">
+    <p>&copy; <span id="footer-year">2024</span> KreditProfi Deutschland GmbH. Alle Rechte vorbehalten.</p>
+    <div class="footer-legal-links">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="agb.html">AGB</a>
+      <a href="cookie-richtlinie.html">Cookies</a>
+    </div>
+  </div></div></div>
+</footer>
+<script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
+<script src="assets/js/loader.js"></script>
+<script src="assets/js/cookie-consent.js"></script>
+<script src="assets/js/config.js"></script>
+<script defer src="assets/js/ui.js"></script>
+<script defer src="assets/js/animations.js"></script>
+<script src="assets/js/sw-register.js"></script>
+</body></html>

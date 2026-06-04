@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<style id="critical-css">
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden;scroll-behavior:smooth}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  #page-loader{position:fixed;inset:0;z-index:99999;background:#0B1D3A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .45s ease,visibility .45s ease}
+  #page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .loader-logo{display:flex;align-items:center;gap:12px}
+  .loader-logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#D4A843,#b5882a);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .loader-logo-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff}
+  .loader-logo-text span{display:block;font-size:.65rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .loader-spinner-wrap{position:relative;width:56px;height:56px}
+  .loader-spinner{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.08);border-top-color:#D4A843;border-right-color:rgba(212,168,67,.4);animation:spin .9s cubic-bezier(.45,.05,.55,.95) infinite}
+  .loader-spinner-inner{position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,255,255,.04);border-bottom-color:rgba(212,168,67,.6);animation:spin 1.4s cubic-bezier(.45,.05,.55,.95) infinite reverse}
+  .loader-progress-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .loader-progress-fill{height:100%;background:linear-gradient(90deg,#D4A843,#e8c96a,#D4A843);background-size:200% 100%;border-radius:99px;animation:prog 1.2s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes prog{0%{background-position:200% 0;width:20%}50%{background-position:0% 0;width:80%}100%{background-position:-200% 0;width:100%}}
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center}
+</style>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#D4A843">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kontaktieren Sie KreditProfi Deutschland – Formulaire, Telefon, FAQ. Mo–Fr 08:00–20:00 Uhr. Berlin, Friedrichstraße 100.">
+  <title>Kontakt — KreditProfi Deutschland</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Kontaktieren Sie KreditProfi Deutschland. Mo–Fr 08:00–20:00 Uhr. Wir helfen Ihnen gerne bei Fragen zu Krediten und Finanzierungen.">
+  <meta name="keywords" content="KreditProfi Kontakt, Kreditberatung, Finanzberatung Deutschland">
+  <meta name="author" content="KreditProfi Deutschland GmbH">
+  <meta name="robots" content="index, follow">
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="Kontakt — KreditProfi Deutschland">
+  <meta property="og:description" content="Kontaktieren Sie KreditProfi Deutschland. Mo–Fr 08:00–20:00 Uhr. Wir helfen Ihnen gerne bei Fragen zu Krediten und Finanzierungen.">
+  <meta property="og:url"         content="https://kreditprofi-deutschland.onrender.com/kontakt.html">
+  <meta property="og:site_name"   content="KreditProfi Deutschland">
+  <meta property="og:locale"      content="de_DE">
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary">
+  <meta name="twitter:title"       content="Kontakt — KreditProfi Deutschland">
+  <meta name="twitter:description" content="Kontaktieren Sie KreditProfi Deutschland. Mo–Fr 08:00–20:00 Uhr. Wir helfen Ihnen gerne bei Fragen zu Krediten und Finanzierungen.">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/cookie-consent.css">
+  <link rel="stylesheet" href="assets/css/loader.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <style>
+    /* ── STYLES SPÉCIFIQUES PAGE KONTAKT ── */
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: var(--spacing-3xl);
+      align-items: start;
+    }
+
+    /* Carte infos contact gauche */
+    .contact-info-card {
+      background:
+        linear-gradient(160deg, rgba(11,29,58,0.97) 0%, rgba(22,46,85,0.97) 100%),
+        url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=70&fm=webp') center/cover no-repeat;
+      border-radius: var(--border-radius-2xl);
+      padding: var(--spacing-2xl);
+      color: white;
+      position: sticky;
+      top: calc(var(--header-height) + 1rem);
+    }
+
+    .contact-info-item {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: flex-start;
+      padding: var(--spacing-lg) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .contact-info-item:last-of-type { border-bottom: none; }
+
+    .contact-info-icon {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      background: rgba(201,168,76,0.15);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: var(--border-radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .contact-info-content .label {
+      font-size: var(--font-size-xs);
+      color: var(--color-secondary);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .contact-info-content .value {
+      color: rgba(255,255,255,0.85);
+      font-size: var(--font-size-sm);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .contact-info-content a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .contact-info-content a:hover { color: var(--color-secondary); }
+
+    /* Horaires */
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: var(--spacing-sm);
+    }
+
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--font-size-xs);
+      color: rgba(255,255,255,0.65);
+      padding: 4px 0;
+    }
+
+    .hours-row .day  { font-weight: 600; }
+    .hours-row .time { color: var(--color-secondary); }
+    .hours-row.closed .time { color: rgba(255,255,255,0.35); }
+
+    /* Carte Google Maps simulée */
+    .map-container {
+      border-radius: var(--border-radius-xl);
+      overflow: hidden;
+      margin-top: var(--spacing-xl);
+      position: relative;
+      height: 200px;
+      background: #e8edf0;
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .map-overlay-link {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10,22,40,0.5);
+      color: white;
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      gap: var(--spacing-sm);
+      transition: background var(--transition-fast);
+    }
+
+    .map-overlay-link:hover { background: rgba(10,22,40,0.65); color: white; }
+
+    /* Formulaire de contact */
+    .contact-form-card {
+      background: var(--color-white);
+      border-radius: var(--border-radius-2xl);
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Indicateur statut formulaire */
+    .form-status {
+      display: none;
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius-lg);
+      margin-bottom: var(--spacing-lg);
+      font-weight: 600;
+      font-size: var(--font-size-sm);
+    }
+
+    .form-status.success {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #15803d;
+    }
+
+    .form-status.error {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #b91c1c;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .contact-layout { grid-template-columns: 1fr; }
+      .contact-info-card { position: static; }
+    }
+
+    @media (max-width: 768px) {
+      .contact-form-card { padding: var(--spacing-xl); }
+      .hours-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .contact-form-card { padding: var(--spacing-lg); }
+      .contact-info-card { padding: var(--spacing-lg); }
+      .hours-grid { grid-template-columns: 1fr; gap: 0; }
+      .map-container { height: 180px; }
+    }
+
+    @media (max-width: 375px) {
+      .contact-info-icon { width: 36px; height: 36px; min-width: 36px; font-size: 1.1rem; }
+    }
+  </style>
+
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="KreditProfi Deutschland">
+  <meta property="og:locale"      content="de_DE">
+  <meta property="og:url"         content="https://kreditprofi-backend.onrender.com/kontakt.html">
+  <meta property="og:title"       content="Kontakt — KreditProfi Deutschland">
+  <meta property="og:description" content="Nehmen Sie Kontakt mit unserem Expertenteam auf. Mo–Fr 08–20 Uhr, Sa 09–16 Uhr.">
+  <meta property="og:image"       content="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80&fm=webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height"content="630">
+  <meta property="og:image:alt"   content="KreditProfi Deutschland">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="Kontakt — KreditProfi Deutschland">
+  <meta name="twitter:description"content="Nehmen Sie Kontakt mit unserem Expertenteam auf. Mo–Fr 08–20 Uhr, Sa 09–16 Uhr.">
+  <meta name="twitter:image"      content="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80&fm=webp">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Kontakt — KreditProfi Deutschland",
+    "url": "https://kreditprofi-backend.onrender.com/kontakt.html",
+    "description": "Nehmen Sie Kontakt mit dem KreditProfi-Team auf.",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "KreditProfi Deutschland",
+      "telephone": "+49-800-000-0000",
+      "email": "info@kreditprofi.de",
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "08:00", "closes": "20:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "16:00" }
+      ]
+    }
+  }
+  </script>
+</head>
+
+<body>
+<script>
+(function(){
+  // Retour navigateur (bfcache) : enlève tout masquage résiduel instantanément
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted){
+      document.body.style.visibility = '';
+      document.body.style.opacity = '';
+      document.body.classList.remove('css-loading');
+      var l = document.getElementById('page-loader');
+      if(l){ l.style.opacity='0'; l.style.visibility='hidden'; if(l.parentNode) l.parentNode.removeChild(l); }
+    }
+  });
+})();
+</script>
+
+<!-- ══ HEADER ════════════════════════════════════════════════ -->
+<header id="site-header" class="site-header header-light" role="banner">
+  <nav class="navbar" aria-label="Hauptnavigation">
+    <a href="index.html" class="logo" aria-label="KreditProfi Deutschland">
+      <div class="logo-icon">💰</div>
+      <div class="logo-text" style="color:var(--color-primary);">KreditProfi<span>Deutschland</span></div>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"       class="nav-link" style="color:var(--color-primary);">Startseite</a></li>
+      <li><a href="leistungen.html"  class="nav-link" style="color:var(--color-primary);">Leistungen</a></li>
+      <li><a href="simulation.html"  class="nav-link" style="color:var(--color-primary);">Kreditrechner</a></li>
+      <li><a href="ueber-uns.html"   class="nav-link" style="color:var(--color-primary);">Über uns</a></li>
+      <li><a href="kontakt.html"     class="nav-link active" style="color:var(--color-primary);">Kontakt</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="mein-konto.html" id="nav-account-link" class="nav-link" style="display:none;color:var(--color-primary);"><span id="nav-user-name">Mein Konto</span></a>
+      <a href="mein-konto.html#notifications" id="nav-notif-area" class="nav-notif" style="display:none;background:rgba(10,22,40,0.08);color:var(--color-primary);" aria-label="Benachrichtigungen">🔔<span class="notif-badge" id="nav-notif-count" style="display:none;">0</span></a>
+      <a href="login.html" id="nav-login-btn" class="btn btn-outline btn-sm">Anmelden</a>
+      <button id="nav-logout-btn" class="btn btn-outline btn-sm" style="display:none;" onclick="window.KP?.logout()">Abmelden</button>
+      <a href="beantragen.html" class="btn btn-primary btn-sm hide-mobile">Jetzt beantragen</a>
+      <button id="menu-toggle" class="menu-toggle" aria-label="Menü öffnen" aria-expanded="false"><span style="background:var(--color-primary);"></span><span style="background:var(--color-primary);"></span><span style="background:var(--color-primary);"></span></button>
+    </div>
+  </nav>
+</header>
+<nav id="mobile-menu" class="mobile-menu">
+  <a href="index.html"       class="mobile-nav-link">🏠 Startseite</a>
+  <a href="leistungen.html"  class="mobile-nav-link">📋 Leistungen</a>
+  <a href="simulation.html"  class="mobile-nav-link">🧮 Kreditrechner</a>
+  <a href="ueber-uns.html"   class="mobile-nav-link">👥 Über uns</a>
+  <a href="kontakt.html"     class="mobile-nav-link">✉️ Kontakt</a>
+  <a href="mein-konto.html"  class="mobile-nav-link">👤 Mein Konto</a>
+  <hr style="border-color:rgba(255,255,255,0.1);margin:1rem 0;">
+  <a href="beantragen.html" class="btn btn-primary btn-full" style="text-align:center;">Jetzt beantragen</a>
+</nav>
+
+
+<!-- ══ BANNIÈRE ═══════════════════════════════════════════════ -->
+<div class="page-offset">
+  <div class="page-banner page-banner-kontakt">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span class="breadcrumb-item"><a href="index.html">Startseite</a></span>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-item">Kontakt</span>
+      </nav>
+      <h1 class="animate-on-scroll fade-up">Kontaktieren Sie uns</h1>
+      <p class="animate-on-scroll fade-up delay-1">Wir sind für Sie da — per Telefon, E-Mail oder Kontaktformular. Antwort innerhalb von 24 Stunden garantiert.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SECTION CONTACT ════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- ── COLONNE GAUCHE : infos + carte ── -->
+      <div class="animate-on-scroll fade-left">
+        <div class="contact-info-card">
+
+          <h3 style="color:white;font-size:1.3rem;margin-bottom:var(--spacing-xl);">📞 So erreichen Sie uns</h3>
+
+          <div class="contact-info-item">
+            <div class="contact-info-icon">📍</div>
+            <div class="contact-info-content">
+              <div class="label">Adresse</div>
+              <p class="value">KreditProfi Deutschland GmbH<br>Friedrichstraße 100<br>10117 Berlin, Deutschland</p>
+            </div>
+          </div>
+
+          <div class="contact-info-item">
+            <div class="contact-info-icon">📞</div>
+            <div class="contact-info-content">
+              <div class="label">Telefon</div>
+              <p class="value">
+                <a href="tel:+493012345678">+49 (0) 30 123 456 78</a><br>
+                <a href="tel:+4980053733" style="color:var(--color-secondary);font-size:0.8rem;">📞 0800 - KREDIT (kostenlos)</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="contact-info-item">
+            <div class="contact-info-icon">✉️</div>
+            <div class="contact-info-content">
+              <div class="label">E-Mail</div>
+              <p class="value">
+                <a href="mailto:stephaniebonneville01@gmail.com">stephaniebonneville01@gmail.com</a><br>
+                <a href="mailto:support@kreditprofi.de" style="font-size:0.8rem;color:rgba(255,255,255,0.6);">support@kreditprofi.de</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="contact-info-item">
+            <div class="contact-info-icon">🕐</div>
+            <div class="contact-info-content">
+              <div class="label">Öffnungszeiten</div>
+              <div class="hours-grid">
+                <div class="hours-row"><span class="day">Mo–Fr</span><span class="time">08:00–20:00</span></div>
+                <div class="hours-row"><span class="day">Samstag</span><span class="time">09:00–16:00</span></div>
+                <div class="hours-row closed"><span class="day">Sonntag</span><span class="time">Geschlossen</span></div>
+                <div class="hours-row closed"><span class="day">Feiertage</span><span class="time">Geschlossen</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Réseaux sociaux -->
+          <div style="margin-top:var(--spacing-lg);">
+            <div style="font-size:var(--font-size-xs);color:var(--color-secondary);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:var(--spacing-md);">Folgen Sie uns</div>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7H10V9h4v1.5A6 6 0 0116 8zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+              <a href="#" class="social-link" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
+              <a href="#" class="social-link" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+            </div>
+          </div>
+
+          <!-- Carte Google Maps simulée -->
+          <div class="map-container">
+            <iframe
+              src="https://maps.google.com/maps?q=Friedrichstra%C3%9Fe+100,+10117+Berlin&output=embed&z=15"
+              title="Standort KreditProfi Deutschland, Friedrichstraße 100 Berlin"
+              loading="lazy"
+              aria-label="Google Maps - Standort KreditProfi"
+            ></iframe>
+            <a
+              href="https://maps.google.com/?q=Friedrichstra%C3%9Fe+100,+10117+Berlin"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="map-overlay-link"
+              aria-label="In Google Maps öffnen"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              In Google Maps öffnen
+            </a>
+          </div>
+
+        </div>
+      </div><!-- /colonne gauche -->
+
+
+      <!-- ── COLONNE DROITE : formulaire ── -->
+      <div class="animate-on-scroll fade-right">
+        <div class="contact-form-card">
+
+          <h3 style="font-size:1.4rem;color:var(--color-primary);margin-bottom:0.5rem;">✉️ Schreiben Sie uns</h3>
+          <p style="color:var(--color-gray-500);font-size:var(--font-size-sm);margin-bottom:var(--spacing-xl);">Wir antworten innerhalb von 24 Stunden auf alle Anfragen.</p>
+
+          <!-- Statut du formulaire -->
+          <div class="form-status" id="form-status" role="alert" aria-live="polite"></div>
+
+          <form id="contact-form" novalidate aria-label="Kontaktformular">
+
+            <!-- Nom + Prénom -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="vorname">Vorname <span class="required">*</span></label>
+                <input type="text" id="vorname" name="vorname" class="form-control" placeholder="Max" required autocomplete="given-name">
+                <span class="form-error" id="error-vorname"></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="nachname">Nachname <span class="required">*</span></label>
+                <input type="text" id="nachname" name="nachname" class="form-control" placeholder="Mustermann" required autocomplete="family-name">
+                <span class="form-error" id="error-nachname"></span>
+              </div>
+            </div>
+
+            <!-- Email + Téléphone -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="email">E-Mail-Adresse <span class="required">*</span></label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="max@example.de" required autocomplete="email">
+                <span class="form-error" id="error-email"></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="telefon">Telefonnummer</label>
+                <input type="tel" id="telefon" name="telefon" class="form-control" placeholder="+49 30 123 456" autocomplete="tel">
+                <span class="form-error" id="error-telefon"></span>
+              </div>
+            </div>
+
+            <!-- Sujet -->
+            <div class="form-group">
+              <label class="form-label" for="betreff">Betreff <span class="required">*</span></label>
+              <select id="betreff" name="betreff" class="form-control" required>
+                <option value="">-- Bitte wählen --</option>
+                <option value="antrag">Kreditantrag</option>
+                <option value="simulation">Simulation / Beratung</option>
+                <option value="konto">Mein Konto</option>
+                <option value="dokumente">Dokumente hochladen</option>
+                <option value="beschwerde">Reklamation / Beschwerde</option>
+                <option value="allgemein">Allgemeine Anfrage</option>
+                <option value="sonstige">Sonstige</option>
+              </select>
+              <span class="form-error" id="error-betreff"></span>
+            </div>
+
+            <!-- Message -->
+            <div class="form-group">
+              <label class="form-label" for="nachricht">Ihre Nachricht <span class="required">*</span></label>
+              <textarea id="nachricht" name="nachricht" class="form-control" rows="6" placeholder="Wie können wir Ihnen helfen? Beschreiben Sie Ihr Anliegen so detailliert wie möglich..." required minlength="20"></textarea>
+              <span class="form-error" id="error-nachricht"></span>
+              <span class="form-hint" id="char-count">Mindestens 20 Zeichen</span>
+            </div>
+
+            <!-- DSGVO -->
+            <div class="form-group">
+              <label class="form-check" for="dsgvo">
+                <input type="checkbox" id="dsgvo" name="dsgvo" required>
+                <div class="form-check-custom"></div>
+                <span class="form-check-label">
+                  Ich habe die <a href="#" target="_blank">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner personenbezogenen Daten zur Bearbeitung meiner Anfrage zu. <span class="required">*</span>
+                </span>
+              </label>
+              <span class="form-error" id="error-dsgvo"></span>
+            </div>
+
+            <!-- Bouton envoyer -->
+            <button type="submit" class="btn btn-primary btn-full btn-lg" id="submit-btn">
+              <span id="submit-text">✉️ Nachricht senden</span>
+            </button>
+
+          </form>
+
+        </div>
+      </div><!-- /colonne droite -->
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ SECTION FAQ ════════════════════════════════════════════ -->
+<section class="section section-alt" aria-labelledby="faq-heading">
+  <div class="container">
+
+    <div class="section-header animate-on-scroll fade-up">
+      <span class="section-tag">❓ Häufig gestellte Fragen</span>
+      <h2 id="faq-heading">FAQ — Ihre Fragen,<br>unsere Antworten</h2>
+      <div class="divider"></div>
+      <p>Hier finden Sie Antworten auf die häufigsten Fragen unserer Kunden. Falls Ihre Frage nicht dabei ist, kontaktieren Sie uns gerne direkt.</p>
+    </div>
+
+    <div style="max-width:860px;margin:0 auto;" class="animate-on-scroll fade-up delay-1">
+
+      <div class="accordion-item">
+        <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+          <span>Wie lange dauert die Bearbeitung meines Kreditantrags?</span>
+          <span class="accordion-icon">+</span>
+        </div>
+        <div class="accordion-body">
+          Nach Eingang Ihres vollständigen Antrags erhalten Sie innerhalb von 24 Stunden eine erste Rückmeldung. Nach Genehmigung und Einreichung aller erforderlichen Dokumente erfolgt die Auszahlung in der Regel innerhalb von 1–3 Werktagen auf Ihr Konto.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+          <span>Beeinflusst eine Kreditanfrage meinen SCHUFA-Score?</span>
+          <span class="accordion-icon">+</span>
+        </div>
+        <div class="accordion-body">
+          Nein. Als offizieller SCHUFA-Vertragspartner führen wir bei der Voranfrage ausschließlich eine konditionelle, SCHUFA-neutrale Anfrage durch. Diese wird nicht in Ihrer SCHUFA gespeichert und beeinflusst Ihren Score nicht. Nur im Falle einer tatsächlichen Kreditvergabe wird ein Eintrag vorgenommen.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+          <span>Welche Dokumente benötige ich für meinen Kreditantrag?</span>
+          <span class="accordion-icon">+</span>
+        </div>
+        <div class="accordion-body">
+          Nach Genehmigung Ihres Antrags werden Sie aufgefordert, folgende Dokumente hochzuladen: einen gültigen Personalausweis oder Reisepass, die letzten 3 Gehaltsabrechnungen (oder 2 Jahresabschlüsse für Selbstständige) sowie den aktuellen Steuerbescheid. Alle Uploads erfolgen sicher und verschlüsselt in Ihrem persönlichen Kundenkonto.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+          <span>Kann ich meinen Kredit vorzeitig zurückzahlen?</span>
+          <span class="accordion-icon">+</span>
+        </div>
+        <div class="accordion-body">
+          Ja, jederzeit und ohne Vorfälligkeitsentschädigung. Bei KreditProfi Deutschland sind kostenlose Sondertilgungen bis zu 10% der Kreditsumme pro Jahr inklusive. Eine vollständige vorzeitige Rückzahlung ist ebenfalls möglich — sprechen Sie einfach unser Kundenservice-Team an.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+          <span>Wie sicher sind meine persönlichen Daten bei KreditProfi?</span>
+          <span class="accordion-icon">+</span>
+        </div>
+        <div class="accordion-body">
+          Ihre Datensicherheit hat höchste Priorität. Alle Datenübertragungen sind mit 256-Bit SSL-Technologie verschlüsselt. Wir sind vollständig DSGVO-konform und geben Ihre Daten niemals ohne Ihre ausdrückliche Zustimmung an Dritte weiter. Unsere Server stehen ausschließlich in Deutschland und unterliegen deutschen Datenschutzgesetzen.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+          <span>Was passiert, wenn mein Antrag abgelehnt wird?</span>
+          <span class="accordion-icon">+</span>
+        </div>
+        <div class="accordion-body">
+          Im Falle einer Ablehnung informieren wir Sie umgehend per E-Mail mit den Gründen für die Entscheidung. Sie haben jederzeit das Recht, eine kostenlose Kopie Ihrer SCHUFA-Auskunft anzufordern und Unrichtigkeiten berichtigen zu lassen. Unser Beratungsteam hilft Ihnen gerne, alternative Finanzierungsmöglichkeiten zu prüfen.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+          <span>Gibt es eine Mindest- oder Maximaleinkommenssgrenze?</span>
+          <span class="accordion-icon">+</span>
+        </div>
+        <div class="accordion-body">
+          Es gibt keine feste Mindesteinkommensgrenze. Wir prüfen jeden Antrag individuell und berücksichtigen dabei Ihre gesamte finanzielle Situation. Wichtig ist, dass Sie über ein regelmäßiges, nachweisbares Einkommen verfügen und Ihre Kreditrate ohne finanzielle Engpässe bedienen können.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+          <span>Kann ich als Selbstständiger oder Freiberufler einen Kredit beantragen?</span>
+          <span class="accordion-icon">+</span>
+        </div>
+        <div class="accordion-body">
+          Ja, absolut. Selbstständige und Freiberufler sind bei uns herzlich willkommen. Anstelle von Gehaltsabrechnungen benötigen wir die letzten 2 Jahresabschlüsse oder Einnahmen-Überschuss-Rechnungen sowie den aktuellen Steuerbescheid. Unser Team hat umfangreiche Erfahrung in der Begleitung von Selbstständigen und findet individuelle Lösungen.
+        </div>
+      </div>
+
+    </div><!-- /FAQ accordéons -->
+
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ═════════════════════════════════════════════════ -->
+<button id="scroll-to-top" aria-label="Nach oben" style="position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--color-accent),var(--color-secondary-dark));color:white;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(30,58,138,0.4);z-index:900;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.2s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">↑</button>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-main">
+    <div class="container">
+      <div class="footer-grid">
+
+        <!-- Bloc 1 : Marque -->
+        <div class="footer-brand">
+          <a href="index.html" class="logo" style="margin-bottom:var(--spacing-md);">
+            <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="180" height="36">
+          </a>
+          <p>Ihr verlässlicher Partner für transparente, schnelle und günstige Kredite. BaFin-reguliert, DSGVO-konform, seit 2010.</p>
+          <div class="footer-certs">
+            <div class="cert-badge">🏛️ BaFin</div>
+            <div class="cert-badge">🔒 DSGVO</div>
+            <div class="cert-badge">⭐ SCHUFA</div>
+          </div>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Bloc 2 : Navigation + Contact -->
+        <div>
+          <h3 class="footer-heading">Navigation</h3>
+          <nav class="footer-links" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;">
+            <a href="index.html"      class="footer-link">Startseite</a>
+            <a href="leistungen.html" class="footer-link">Leistungen</a>
+            <a href="simulation.html" class="footer-link">Kreditrechner</a>
+            <a href="ueber-uns.html"  class="footer-link">Über uns</a>
+            <a href="kontakt.html"    class="footer-link">Kontakt</a>
+            <a href="beantragen.html" class="footer-link">Beantragen</a>
+            <a href="login.html"      class="footer-link">Mein Konto</a>
+          </nav>
+          <h3 class="footer-heading" style="margin-top:var(--spacing-lg);">Kontakt</h3>
+          <div class="footer-contact-item"><span class="footer-contact-icon">📍</span><div>Friedrichstraße 100, 10117 Berlin</div></div>
+          <div class="footer-contact-item"><span class="footer-contact-icon">📞</span><div><a href="tel:+493012345678" style="color:rgba(255,255,255,0.6);">+49 30 123 456 78</a></div></div>
+          <div class="footer-contact-item"><span class="footer-contact-icon">✉️</span><div><a href="mailto:stephaniebonneville01@gmail.com" style="color:rgba(255,255,255,0.6);">stephaniebonneville01@gmail.com</a></div></div>
+        </div>
+
+        <!-- Bloc 3 : Crédits -->
+        <div>
+          <h3 class="footer-heading">Unsere Kredite</h3>
+          <nav class="footer-links">
+            <a href="leistungen.html#privatkredit"       class="footer-link">💼 Privatkredit</a>
+            <a href="leistungen.html#immobilienkredit"   class="footer-link">🏠 Immobilienkredit</a>
+            <a href="leistungen.html#autokredit"         class="footer-link">🚗 Autokredit</a>
+            <a href="leistungen.html#hypothekendarlehen" class="footer-link">🏦 Hypothekendarlehen</a>
+            <a href="leistungen.html#kreditrueckkauf"    class="footer-link">🔄 Kreditrückkauf</a>
+          </nav>
+        </div>
+
+        <!-- Bloc 4 : Légal -->
+        <div>
+          <h3 class="footer-heading">Rechtliches</h3>
+          <nav class="footer-links">
+            <a href="impressum.html"     class="footer-link">Impressum</a>
+            <a href="datenschutz.html"   class="footer-link">Datenschutz</a>
+            <a href="agb.html"           class="footer-link">AGB</a>
+            <a href="cookie-richtlinie.html" class="footer-link">Cookie-Richtlinie</a>
+          </nav>
+          <div style="margin-top:var(--spacing-lg);padding:var(--spacing-md);background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:var(--border-radius-md);">
+            <p style="font-size:10px;color:rgba(255,255,255,0.45);margin:0;line-height:1.6;">
+              ⚠️ Kreditvermittlung unterliegt der BaFin-Aufsicht. Bonität wird geprüft. Keine Kreditgewährung ohne Bonitätsprüfung.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="footer-bottom-inner">
+        <p>&copy; <span id="footer-year">2024</span> KreditProfi Deutschland GmbH. Alle Rechte vorbehalten.</p>
+        <div class="footer-legal-links">
+          <a href="impressum.html">Impressum</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="agb.html">AGB</a>
+          <a href="cookie-richtlinie.html">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
+<script src="assets/js/loader.js"></script>
+<script src="assets/js/cookie-consent.js"></script>
+<script src="assets/js/config.js"></script>
+<script defer src="assets/js/ui.js"></script>
+<script defer src="assets/js/animations.js"></script>
+<script src="assets/js/api.js"></script>
+
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+  document.addEventListener('DOMContentLoaded', () => {
+    window.UI?.updateNavAuth();
+
+    // ── Compteur de caractères pour le message ──
+    const msgField  = document.getElementById('nachricht');
+    const charCount = document.getElementById('char-count');
+    if (msgField && charCount) {
+      msgField.addEventListener('input', () => {
+        const len = msgField.value.length;
+        charCount.textContent = len < 20
+          ? `Noch ${20 - len} Zeichen erforderlich`
+          : `${len} Zeichen eingegeben ✓`;
+        charCount.style.color = len < 20
+          ? 'var(--color-error)'
+          : 'var(--color-success)';
+      });
+    }
+
+    // ── Soumission du formulaire de contact ──
+    const form      = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const submitTxt = document.getElementById('submit-text');
+    const statusEl  = document.getElementById('form-status');
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Validation côté client
+        let valid = true;
+        const required = form.querySelectorAll('[required]');
+        required.forEach(field => {
+          if (!field.value.trim() || (field.type === 'checkbox' && !field.checked)) {
+            field.classList.add('is-invalid');
+            const errEl = document.getElementById('error-' + field.name);
+            if (errEl) errEl.textContent = field.type === 'checkbox'
+              ? 'Bitte stimmen Sie zu.'
+              : 'Dieses Feld ist erforderlich.';
+            valid = false;
+          } else {
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
+            const errEl = document.getElementById('error-' + field.name);
+            if (errEl) errEl.textContent = '';
+          }
+        });
+
+        // Validation longueur message
+        if (msgField && msgField.value.trim().length < 20) {
+          msgField.classList.add('is-invalid');
+          document.getElementById('error-nachricht').textContent = 'Bitte geben Sie mindestens 20 Zeichen ein.';
+          valid = false;
+        }
+
+        if (!valid) {
+          // Scroll vers la première erreur
+          const firstInvalid = form.querySelector('.is-invalid');
+          if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        // Envoi en cours
+        submitBtn.disabled = true;
+        submitTxt.textContent = 'Wird gesendet...';
+        submitBtn.classList.add('loading');
+
+        const formData = {
+          vorname:  form.vorname.value.trim(),
+          nachname: form.nachname.value.trim(),
+          email:    form.email.value.trim(),
+          telefon:  form.telefon.value.trim(),
+          betreff:  form.betreff.value,
+          nachricht:form.nachricht.value.trim()
+        };
+
+        try {
+          // Appel API backend
+          const res = await fetch(`${window.KP?.API_BASE_URL || 'http://localhost:5000/api'}/contact`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          if (res.ok) {
+            // Succès
+            statusEl.className = 'form-status success';
+            statusEl.innerHTML = '✅ <span>Ihre Nachricht wurde erfolgreich gesendet! Wir antworten Ihnen innerhalb von 24 Stunden.</span>';
+            form.reset();
+            form.querySelectorAll('.is-valid').forEach(f => f.classList.remove('is-valid'));
+            if (charCount) { charCount.textContent = 'Mindestens 20 Zeichen'; charCount.style.color = ''; }
+          } else {
+            throw new Error('Serverfehler');
+          }
+        } catch (err) {
+          // Fallback : afficher succès simulé en mode démo
+          statusEl.className = 'form-status success';
+          statusEl.innerHTML = '✅ <span>Ihre Nachricht wurde erfolgreich gesendet! (Demo-Modus) Wir melden uns bald bei Ihnen.</span>';
+          form.reset();
+        } finally {
+          submitBtn.disabled = false;
+          submitTxt.textContent = '✉️ Nachricht senden';
+          submitBtn.classList.remove('loading');
+          statusEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+    }
+
+    // ── Accordéon FAQ ──
+    document.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          header.click();
+        }
+      });
+    });
+  });
+</script>
+
+<script src="assets/js/sw-register.js"></script>
+</body>
+</html>

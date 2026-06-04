@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Pages privées — non indexées
+Disallow: /admin.html
+Disallow: /mein-konto.html
+Disallow: /login.html
+
+Sitemap: https://kreditprofi-backend.onrender.com/sitemap.xml

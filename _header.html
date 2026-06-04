@@ -1,0 +1,93 @@
+<!-- ============================================================
+   _header.html — Fragment HTML du header réutilisable
+   KreditProfi Deutschland — Inclus dans toutes les pages
+   USAGE : copier ce bloc dans chaque fichier .html
+   ============================================================ -->
+
+<!-- ── EN-TÊTE DU SITE (fixe avec glassmorphism au scroll) ── -->
+<header id="site-header" class="site-header header-transparent" role="banner">
+  <nav class="navbar" aria-label="Hauptnavigation">
+
+    <!-- Logo à gauche -->
+    <a href="index.html" class="logo" aria-label="KreditProfi Deutschland - Startseite">
+      <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="200" height="40">
+    </a>
+
+    <!-- Liens de navigation centrés (desktop) -->
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"       class="nav-link">Startseite</a></li>
+      <li><a href="leistungen.html"  class="nav-link">Leistungen</a></li>
+      <li><a href="simulation.html"  class="nav-link">Kreditrechner</a></li>
+      <li><a href="ueber-uns.html"   class="nav-link">Über uns</a></li>
+      <li><a href="kontakt.html"     class="nav-link">Kontakt</a></li>
+    </ul>
+
+    <!-- Actions à droite -->
+    <div class="nav-actions">
+
+      <!-- Bouton "Mein Konto" (affiché si connecté) -->
+      <a href="mein-konto.html" id="nav-account-link"
+         class="nav-link"
+         style="display:none;"
+         aria-label="Mein Konto">
+        <span id="nav-user-name">Mein Konto</span>
+      </a>
+
+      <!-- Zone de notification (affiché si connecté) -->
+      <a href="mein-konto.html#notifications"
+         id="nav-notif-area"
+         class="nav-notif"
+         style="display:none;"
+         aria-label="Benachrichtigungen"
+         title="Benachrichtigungen">
+        🔔
+        <span class="notif-badge" id="nav-notif-count" style="display:none;">0</span>
+      </a>
+
+      <!-- Bouton connexion (affiché si non connecté) -->
+      <a href="login.html" id="nav-login-btn" class="btn btn-outline-white btn-sm">
+        Anmelden
+      </a>
+
+      <!-- Bouton déconnexion (affiché si connecté) -->
+      <button id="nav-logout-btn"
+              class="btn btn-outline-white btn-sm"
+              style="display:none;"
+              onclick="window.KP?.logout()">
+        Abmelden
+      </button>
+
+      <!-- Bouton CTA principal -->
+      <a href="beantragen.html" class="btn btn-primary btn-sm hide-mobile">
+        Jetzt beantragen
+      </a>
+
+      <!-- Bouton hamburger (mobile) -->
+      <button id="menu-toggle"
+              class="menu-toggle"
+              aria-label="Menü öffnen"
+              aria-expanded="false"
+              aria-controls="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+  </nav><!-- /navbar -->
+</header><!-- /site-header -->
+
+
+<!-- ── MENU MOBILE ───────────────────────────────────────── -->
+<nav id="mobile-menu" class="mobile-menu" aria-label="Mobile Navigation" role="navigation">
+  <a href="index.html"       class="mobile-nav-link">🏠 Startseite</a>
+  <a href="leistungen.html"  class="mobile-nav-link">📋 Leistungen</a>
+  <a href="simulation.html"  class="mobile-nav-link">🧮 Kreditrechner</a>
+  <a href="ueber-uns.html"   class="mobile-nav-link">👥 Über uns</a>
+  <a href="kontakt.html"     class="mobile-nav-link">✉️ Kontakt</a>
+  <a href="mein-konto.html"  class="mobile-nav-link" id="mobile-account-link">👤 Mein Konto</a>
+  <hr style="border-color:rgba(255,255,255,0.1);margin:1rem 0;">
+  <a href="beantragen.html"  class="btn btn-primary btn-full" style="text-align:center;">
+    Jetzt beantragen
+  </a>
+</nav>

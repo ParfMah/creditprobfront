@@ -1,0 +1,490 @@
+/* ============================================================
+   animations.css — Toutes les animations CSS
+   KreditProfi Deutschland — Effets visuels et transitions
+   ============================================================ */
+
+/* ── CLASSES D'ANIMATION AU SCROLL (Intersection Observer) ─ */
+
+/* État initial : invisible avant l'entrée dans le viewport */
+.animate-on-scroll {
+  opacity: 0;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Montée depuis le bas */
+.fade-up {
+  transform: translateY(40px);
+}
+
+/* Montée depuis le bas (légère) */
+.fade-up-sm {
+  transform: translateY(20px);
+}
+
+/* Entrée depuis la gauche */
+.fade-left {
+  transform: translateX(-40px);
+}
+
+/* Entrée depuis la droite */
+.fade-right {
+  transform: translateX(40px);
+}
+
+/* Zoom depuis le centre */
+.zoom-in {
+  transform: scale(0.92);
+}
+
+/* État visible après animation (ajouté par JS) */
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Délais d'animation pour les grilles d'éléments */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
+.delay-6 { transition-delay: 0.6s; }
+
+/* ── ANIMATION HERO (chargement initial) ─────────────────── */
+
+.hero-animate-1 {
+  animation: heroSlideUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+.hero-animate-2 {
+  animation: heroSlideUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+
+.hero-animate-3 {
+  animation: heroSlideUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+
+.hero-animate-4 {
+  animation: heroSlideUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+}
+
+@keyframes heroSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── COMPTEURS ANIMÉS ────────────────────────────────────── */
+
+/* Le nombre s'affiche via JS — animation CSS de flou initial */
+.counter-value {
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+/* ── EFFET PULSE SUR LE BOUTON CTA PRINCIPAL ─────────────── */
+
+.btn-pulse {
+  animation: ctaPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes ctaPulse {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(30,58,138,0.3), 0 0 0 0 rgba(201,168,76,0.4);
+  }
+  50% {
+    box-shadow: 0 8px 28px rgba(30,58,138,0.4), 0 0 0 14px rgba(201,168,76,0);
+  }
+}
+
+/* ── FLOTTEMENT (éléments décoratifs hero) ───────────────── */
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+.float-animation-delayed {
+  animation: float 6s ease-in-out 2s infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-16px); }
+}
+
+/* ── ROTATION LENTE (formes décoratives) ─────────────────── */
+
+.rotate-slow {
+  animation: rotateSlow 20s linear infinite;
+}
+
+.rotate-slow-reverse {
+  animation: rotateSlow 25s linear infinite reverse;
+}
+
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── SHIMMER (skeleton loading) ──────────────────────────── */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-200) 25%,
+    var(--color-gray-100) 50%,
+    var(--color-gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmerAnim 1.5s infinite;
+  border-radius: var(--border-radius-md);
+}
+
+@keyframes shimmerAnim {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ── LIGNE DE PROGRESSION (barre de chargement page) ─────── */
+
+.page-loader-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-secondary));
+  z-index: 9999;
+  transition: width 0.3s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── EFFET TYPING (curseur clignotant sur titre hero) ─────── */
+
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: var(--color-secondary);
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── CARTE HOVER AVEC EFFET LUMINEUx ─────────────────────── */
+
+.card-glow {
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.card-glow:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 60px rgba(10,22,40,0.15),
+    0 0 0 1px rgba(201,168,76,0.1),
+    inset 0 0 20px rgba(201,168,76,0.02);
+}
+
+/* ── TIMELINE ANIMATION ──────────────────────────────────── */
+
+/* Ligne verticale de la timeline */
+.timeline-line {
+  position: relative;
+}
+
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-secondary) 0%,
+    var(--color-accent) 100%
+  );
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 72px;
+  padding-bottom: var(--spacing-3xl);
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--color-white);
+  border: 3px solid var(--color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+  box-shadow: 0 4px 16px rgba(201,168,76,0.25);
+  z-index: 1;
+}
+
+/* ── ÉTAPES DU PROCESSUS (Wie es funktioniert) ───────────── */
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
+  position: relative;
+}
+
+/* Ligne de connexion entre les étapes */
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 36px;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-secondary),
+    var(--color-accent),
+    var(--color-secondary),
+    var(--color-accent)
+  );
+  background-size: 200% 100%;
+  animation: gradientFlow 3s linear infinite;
+  z-index: 0;
+}
+
+@keyframes gradientFlow {
+  from { background-position: 0% 0%; }
+  to   { background-position: 200% 0%; }
+}
+
+.process-step {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding-top: var(--spacing-xl);
+}
+
+.process-number {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-secondary-dark));
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--spacing-lg);
+  box-shadow: 0 8px 24px rgba(30,58,138,0.35);
+  position: relative;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.process-step:hover .process-number {
+  transform: scale(1.1) translateY(-4px);
+  box-shadow: 0 16px 40px rgba(30,58,138,0.45);
+}
+
+.process-number::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(201,168,76,0.3);
+  animation: rotateSlow 8s linear infinite;
+}
+
+.process-step-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+}
+
+.process-step-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  line-height: 1.6;
+}
+
+/* ── TÉMOIGNAGES (carousel statique) ─────────────────────── */
+
+.testimonial-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.testimonial-card::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: var(--spacing-xl);
+  font-size: 5rem;
+  font-family: var(--font-heading);
+  color: var(--color-secondary);
+  line-height: 1;
+  opacity: 0.3;
+}
+
+.testimonial-text {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-700);
+  line-height: 1.8;
+  font-style: italic;
+  margin-bottom: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.testimonial-info .name {
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.testimonial-info .location {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+/* ── PARTENAIRES (logos) ─────────────────────────────────── */
+
+.partners-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3xl);
+  flex-wrap: wrap;
+  opacity: 0.55;
+  filter: grayscale(100%);
+  transition: opacity var(--transition-base), filter var(--transition-base);
+}
+
+.partners-strip:hover {
+  opacity: 0.75;
+  filter: grayscale(40%);
+}
+
+.partner-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+/* ── EFFET GLITCH SUR LE LOGO (option décorative) ────────── */
+
+@keyframes glitch {
+  0%, 100% { clip-path: none; transform: none; }
+  5%        { clip-path: inset(40% 0 61% 0); transform: translate(-2px); }
+  10%       { clip-path: inset(92% 0 1% 0);  transform: translate(2px); }
+  15%       { clip-path: none; transform: none; }
+}
+
+/* ── SCROLL INDICATOR (flèche bas dans le hero) ──────────── */
+
+.scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: scrollBounce 2s ease-in-out infinite;
+  cursor: pointer;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+.scroll-arrow {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* ── GRADIENT BORDER (cartes premium) ───────────────────── */
+
+.gradient-border {
+  position: relative;
+  background: var(--color-white);
+  border-radius: var(--border-radius-xl);
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--border-radius-xl) + 2px);
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-accent), var(--color-secondary));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.gradient-border:hover::before { opacity: 1; }
+
+/* ── WAVE DÉCORATIF (séparateur de sections) ─────────────── */
+
+.wave-divider {
+  position: relative;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.wave-divider svg {
+  display: block;
+  width: 100%;
+}

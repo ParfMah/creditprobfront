@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<style id="critical-css">
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden;scroll-behavior:smooth}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  #page-loader{position:fixed;inset:0;z-index:99999;background:#0B1D3A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .45s ease,visibility .45s ease}
+  #page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .loader-logo{display:flex;align-items:center;gap:12px}
+  .loader-logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#D4A843,#b5882a);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .loader-logo-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff}
+  .loader-logo-text span{display:block;font-size:.65rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .loader-spinner-wrap{position:relative;width:56px;height:56px}
+  .loader-spinner{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.08);border-top-color:#D4A843;border-right-color:rgba(212,168,67,.4);animation:spin .9s cubic-bezier(.45,.05,.55,.95) infinite}
+  .loader-spinner-inner{position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,255,255,.04);border-bottom-color:rgba(212,168,67,.6);animation:spin 1.4s cubic-bezier(.45,.05,.55,.95) infinite reverse}
+  .loader-progress-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .loader-progress-fill{height:100%;background:linear-gradient(90deg,#D4A843,#e8c96a,#D4A843);background-size:200% 100%;border-radius:99px;animation:prog 1.2s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes prog{0%{background-position:200% 0;width:20%}50%{background-position:0% 0;width:80%}100%{background-position:-200% 0;width:100%}}
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center}
+</style>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#D4A843">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mein Konto – KreditProfi Deutschland. Verwalten Sie Ihren Kreditantrag, laden Sie Dokumente hoch und verfolgen Sie den Status Ihres Dossiers.">
+  <title>Mein Konto – KreditProfi Deutschland</title>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/loader.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <style>
+    /* ── STYLES SPÉCIFIQUES ESPACE CLIENT ── */
+
+    /* Layout principal */
+    .client-page {
+      min-height: 100vh;
+      background: var(--color-bg-light);
+      padding-top: var(--header-height);
+    }
+
+    .client-inner {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    /* Sidebar client */
+    .client-side {
+      background: var(--color-white);
+      border-right: 1px solid var(--color-gray-200);
+      padding: var(--spacing-xl) 0;
+      position: sticky;
+      top: var(--header-height);
+      height: calc(100vh - var(--header-height));
+      overflow-y: auto;
+    }
+
+    /* Profil mini dans la sidebar */
+    .client-profile-mini {
+      padding: var(--spacing-xl);
+      border-bottom: 1px solid var(--color-gray-200);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .client-avatar-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: var(--spacing-sm);
+      font-family: var(--font-heading);
+    }
+
+    .client-name-mini {
+      font-weight: 700;
+      color: var(--color-primary);
+      font-size: var(--font-size-sm);
+      margin-bottom: 2px;
+    }
+
+    .client-email-mini {
+      font-size: var(--font-size-xs);
+      color: var(--color-gray-500);
+    }
+
+    /* Liens sidebar */
+    .client-nav-link {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: 13px var(--spacing-xl);
+      color: var(--color-gray-600);
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+
+    .client-nav-link:hover {
+      color: var(--color-primary);
+      background: var(--color-bg-light);
+    }
+
+    .client-nav-link.active {
+      color: var(--color-accent);
+      background: rgba(30,58,138,0.05);
+      border-left-color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    .client-nav-icon { font-size: 1.1rem; min-width: 22px; text-align: center; }
+
+    /* Zone de contenu principale */
+    .client-main {
+      padding: var(--spacing-2xl);
+      overflow-y: auto;
+    }
+
+    /* Panneaux de contenu */
+    .client-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .client-panel.active { display: block; }
+
+    /* Carte de statut du dossier */
+    .dossier-status-card {
+      background: var(--color-white);
+      border-radius: var(--border-radius-2xl);
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-md);
+      margin-bottom: var(--spacing-xl);
+      border-left: 6px solid var(--color-gray-300);
+      transition: border-color var(--transition-base);
+    }
+
+    .dossier-status-card.status-pending  { border-left-color: #f59e0b; }
+    .dossier-status-card.status-review   { border-left-color: #3b82f6; }
+    .dossier-status-card.status-approved { border-left-color: #22c55e; }
+    .dossier-status-card.status-refused  { border-left-color: #ef4444; }
+
+    /* Timeline de statut */
+    .status-timeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: var(--spacing-xl) 0;
+      padding: 0 var(--spacing-lg);
+    }
+
+    .status-timeline::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: var(--color-gray-200);
+      z-index: 0;
+    }
+
+    .status-timeline-fill {
+      position: absolute;
+      top: 18px;
+      left: 10%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-secondary));
+      z-index: 1;
+      transition: width 0.6s ease;
+    }
+
+    .status-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .status-step-dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--color-gray-200);
+      border: 3px solid var(--color-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-base);
+    }
+
+    .status-step.done .status-step-dot {
+      background: var(--color-success);
+      color: white;
+    }
+
+    .status-step.current .status-step-dot {
+      background: var(--color-accent);
+      color: white;
+      box-shadow: 0 0 0 6px rgba(30,58,138,0.15);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .status-step-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-gray-400);
+      text-align: center;
+      max-width: 70px;
+    }
+
+    .status-step.done .status-step-label,
+    .status-step.current .status-step-label {
+      color: var(--color-primary);
+    }
+
+    /* Zone d'upload documents */
+    .doc-upload-zone {
+      border: 2px dashed var(--color-gray-300);
+      border-radius: var(--border-radius-xl);
+      padding: var(--spacing-2xl);
+      text-align: center;
+      transition: all var(--transition-base);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .doc-upload-zone.dragover {
+      border-color: var(--color-accent);
+      background: rgba(30,58,138,0.03);
+    }
+
+    .doc-upload-zone.locked {
+      background: var(--color-bg-light);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .doc-upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .doc-upload-zone.locked input[type="file"] {
+      pointer-events: none;
+    }
+
+    /* Liste des documents uploadés */
+    .doc-list-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--border-radius-lg);
+      margin-bottom: var(--spacing-sm);
+      transition: all var(--transition-fast);
+    }
+
+    .doc-list-item:hover { box-shadow: var(--shadow-sm); }
+
+    .doc-icon {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: var(--border-radius-md);
+      background: rgba(30,58,138,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .doc-info { flex: 1; min-width: 0; }
+    .doc-name {
+      font-weight: 600;
+      font-size: var(--font-size-sm);
+      color: var(--color-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .doc-meta { font-size: var(--font-size-xs); color: var(--color-gray-500); }
+
+    /* Barre de progression upload */
+    .upload-progress-wrap {
+      display: none;
+      margin-top: var(--spacing-md);
+    }
+
+    .upload-progress-wrap.visible { display: block; }
+
+    /* Formulaire de profil */
+    .profile-section {
+      background: var(--color-white);
+      border-radius: var(--border-radius-2xl);
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .profile-section h3 {
+      font-size: var(--font-size-lg);
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-xl);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid var(--color-gray-200);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .client-inner { grid-template-columns: 1fr; }
+      .client-side   { display: none; }
+      .client-main   { padding: var(--spacing-lg); padding-bottom: calc(var(--spacing-lg) + 64px); }
+    }
+
+    @media (max-width: 768px) {
+      .client-main { padding: var(--spacing-md); padding-bottom: calc(var(--spacing-md) + 64px); }
+      .dossier-status-card { padding: var(--spacing-lg); }
+      .profile-section { padding: var(--spacing-lg); }
+      .doc-upload-zone { padding: var(--spacing-lg); }
+      .status-timeline { padding: 0 var(--spacing-sm); }
+      .status-step-label { font-size: 10px; max-width: 55px; }
+    }
+
+    @media (max-width: 480px) {
+      .client-main { padding: var(--spacing-sm); padding-bottom: calc(var(--spacing-sm) + 64px); }
+      .dossier-status-card { border-left-width: 4px; }
+      .status-timeline-wrap { overflow-x: auto; scrollbar-width: none; }
+      .status-timeline-wrap::-webkit-scrollbar { display: none; }
+      .status-timeline { min-width: 340px; }
+      .doc-list-item { flex-wrap: wrap; gap: var(--spacing-sm); }
+    }
+  </style>
+
+</head>
+
+<body class="client-page-bg">
+<script>
+(function(){
+  // Retour navigateur (bfcache) : enlève tout masquage résiduel instantanément
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted){
+      document.body.style.visibility = '';
+      document.body.style.opacity = '';
+      document.body.classList.remove('css-loading');
+      var l = document.getElementById('page-loader');
+      if(l){ l.style.opacity='0'; l.style.visibility='hidden'; if(l.parentNode) l.parentNode.removeChild(l); }
+    }
+  });
+})();
+</script>
+
+<!-- ══ HEADER ════════════════════════════════════════════════ -->
+<header id="site-header" class="site-header header-light" role="banner">
+  <nav class="navbar" aria-label="Hauptnavigation">
+    <a href="index.html" class="logo" aria-label="KreditProfi Deutschland">
+      <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="200" height="40">
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"      class="nav-link" style="color:var(--color-primary);">Startseite</a></li>
+      <li><a href="leistungen.html" class="nav-link" style="color:var(--color-primary);">Leistungen</a></li>
+      <li><a href="simulation.html" class="nav-link" style="color:var(--color-primary);">Kreditrechner</a></li>
+      <li><a href="kontakt.html"    class="nav-link" style="color:var(--color-primary);">Kontakt</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span id="nav-user-greeting" style="font-size:var(--font-size-sm);color:var(--color-gray-600);font-weight:500;"></span>
+      <a href="mein-konto.html#notifications" id="nav-notif-area" class="nav-notif" style="background:rgba(10,22,40,0.08);color:var(--color-primary);" aria-label="Benachrichtigungen">
+        🔔<span class="notif-badge" id="nav-notif-count" style="display:none;">0</span>
+      </a>
+      <button class="btn btn-outline btn-sm" onclick="window.KP?.logout()">Abmelden</button>
+      <button id="menu-toggle" class="menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span style="background:var(--color-primary);"></span>
+        <span style="background:var(--color-primary);"></span>
+        <span style="background:var(--color-primary);"></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<nav id="mobile-menu" class="mobile-menu">
+  <a href="index.html"      class="mobile-nav-link">🏠 Startseite</a>
+  <a href="leistungen.html" class="mobile-nav-link">📋 Leistungen</a>
+  <a href="simulation.html" class="mobile-nav-link">🧮 Kreditrechner</a>
+  <a href="kontakt.html"    class="mobile-nav-link">✉️ Kontakt</a>
+  <hr style="border-color:rgba(255,255,255,0.1);margin:1rem 0;">
+  <button class="btn btn-outline-white btn-full" onclick="window.KP?.logout()">Abmelden</button>
+</nav>
+
+
+<!-- ══ PAGE PRINCIPALE ═══════════════════════════════════════ -->
+<div class="client-page">
+  <div class="client-inner">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="client-side" role="navigation" aria-label="Konto-Navigation">
+
+      <!-- Mini profil -->
+      <div class="client-profile-mini">
+        <div class="client-avatar-wrap" id="sidebar-avatar">KP</div>
+        <div class="client-name-mini"  id="sidebar-name">Wird geladen...</div>
+        <div class="client-email-mini" id="sidebar-email"></div>
+      </div>
+
+      <!-- Navigation -->
+      <nav>
+        <div class="client-nav-link active" data-panel="dashboard">
+          <span class="client-nav-icon">📊</span> Übersicht
+        </div>
+        <div class="client-nav-link" data-panel="dossier">
+          <span class="client-nav-icon">📋</span> Mein Antrag
+        </div>
+        <div class="client-nav-link" data-panel="documents" id="nav-documents">
+          <span class="client-nav-icon">📎</span> Dokumente
+        </div>
+        <div class="client-nav-link" data-panel="history">
+          <span class="client-nav-icon">📜</span> Verlauf
+        </div>
+        <div class="client-nav-link" data-panel="profile">
+          <span class="client-nav-icon">👤</span> Mein Profil
+        </div>
+        <div class="client-nav-link" data-panel="messages" id="nav-messages-link">
+          <span class="client-nav-icon">💬</span> Nachrichten
+          <span class="notif-badge" id="sidebar-msg-badge" style="display:none;margin-left:auto;background:var(--color-success);">0</span>
+        </div>
+        <div class="client-nav-link" data-panel="notifications" id="nav-notifs-link">
+          <span class="client-nav-icon">🔔</span> Benachrichtigungen
+          <span class="notif-badge" id="sidebar-notif-badge" style="display:none;margin-left:auto;">0</span>
+        </div>
+      </nav>
+
+      <div style="padding:var(--spacing-xl);margin-top:auto;">
+        <button class="btn btn-outline btn-full btn-sm" onclick="window.KP?.logout()" style="color:var(--color-error);border-color:var(--color-error);">
+          🚪 Abmelden
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── CONTENU PRINCIPAL ── -->
+    <main class="client-main" role="main">
+
+      <!-- Loader initial -->
+      <div id="client-loader" style="display:flex;align-items:center;justify-content:center;height:400px;">
+        <div style="text-align:center;">
+          <div class="loader" style="margin:0 auto 1rem;border-top-color:var(--color-accent);"></div>
+          <p style="color:var(--color-gray-500);font-size:var(--font-size-sm);">Daten werden geladen...</p>
+        </div>
+      </div>
+
+      <!-- ══ PANNEAU : DASHBOARD ══ -->
+      <div class="client-panel" id="panel-dashboard">
+
+        <div style="margin-bottom:var(--spacing-xl);">
+          <h1 style="font-size:1.6rem;color:var(--color-primary);">Willkommen zurück, <span id="welcome-name">…</span>! 👋</h1>
+          <p style="color:var(--color-gray-500);font-size:var(--font-size-sm);">Hier sehen Sie eine Übersicht Ihres Kreditantrags.</p>
+        </div>
+
+        <!-- Cartes de résumé -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--spacing-lg);margin-bottom:var(--spacing-xl);">
+
+          <div class="admin-stat-card stat-blue">
+            <div class="admin-stat-icon">📋</div>
+            <div>
+              <div class="admin-stat-label">Antragsnummer</div>
+              <div class="admin-stat-value" id="dash-dossier-number" style="font-size:1rem;">—</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card stat-gold">
+            <div class="admin-stat-icon">💶</div>
+            <div>
+              <div class="admin-stat-label">Beantragter Betrag</div>
+              <div class="admin-stat-value" id="dash-amount" style="font-size:1.2rem;">—</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card stat-green">
+            <div class="admin-stat-icon">📅</div>
+            <div>
+              <div class="admin-stat-label">Eingereicht am</div>
+              <div class="admin-stat-value" id="dash-date" style="font-size:1rem;">—</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Statut principal -->
+        <div class="dossier-status-card" id="dash-status-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:var(--spacing-xl);">
+            <div>
+              <div style="font-size:var(--font-size-xs);font-weight:700;color:var(--color-gray-400);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Aktueller Status</div>
+              <div id="dash-status-badge" class="badge" style="font-size:0.85rem;padding:8px 18px;">Wird geladen...</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:var(--font-size-xs);color:var(--color-gray-400);margin-bottom:2px;">Kreditart</div>
+              <div id="dash-loan-type" style="font-weight:700;color:var(--color-primary);">—</div>
+            </div>
+          </div>
+
+          <!-- Timeline de progression -->
+          <div class="status-timeline" id="status-timeline">
+            <div class="status-timeline-fill" id="status-fill" style="width:0%;"></div>
+            <div class="status-step" id="step-pending">
+              <div class="status-step-dot">⏳</div>
+              <span class="status-step-label">Eingereicht</span>
+            </div>
+            <div class="status-step" id="step-review">
+              <div class="status-step-dot">🔍</div>
+              <span class="status-step-label">In Prüfung</span>
+            </div>
+            <div class="status-step" id="step-approved">
+              <div class="status-step-dot">✅</div>
+              <span class="status-step-label">Genehmigt</span>
+            </div>
+            <div class="status-step" id="step-payout">
+              <div class="status-step-dot">💰</div>
+              <span class="status-step-label">Auszahlung</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message contextuel selon le statut -->
+        <div id="status-message" style="background:var(--color-bg-light);border-radius:var(--border-radius-xl);padding:var(--spacing-xl);margin-bottom:var(--spacing-xl);">
+          <p id="status-message-text" style="color:var(--color-gray-600);font-size:var(--font-size-sm);margin:0;"></p>
+        </div>
+
+        <!-- CTA rapides -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-lg);">
+          <button class="btn btn-primary btn-full" onclick="ClientUI.showPanel('documents')">
+            📎 Dokumente hochladen
+          </button>
+          <a href="kontakt.html" class="btn btn-outline btn-full">✉️ Berater kontaktieren</a>
+        </div>
+
+      </div><!-- /panel-dashboard -->
+
+
+      <!-- ══ PANNEAU : MON DOSSIER ══ -->
+      <div class="client-panel" id="panel-dossier">
+
+        <h2 style="font-size:1.4rem;color:var(--color-primary);margin-bottom:var(--spacing-xl);">📋 Mein Kreditantrag</h2>
+
+        <div style="background:var(--color-white);border-radius:var(--border-radius-2xl);padding:var(--spacing-2xl);box-shadow:var(--shadow-sm);" id="dossier-details">
+          <p style="color:var(--color-gray-400);">Wird geladen...</p>
+        </div>
+
+      </div>
+
+
+      <!-- ══ PANNEAU : DOCUMENTS ══ -->
+      <div class="client-panel" id="panel-documents">
+
+        <h2 style="font-size:1.4rem;color:var(--color-primary);margin-bottom:var(--spacing-sm);">📎 Dokumente hochladen</h2>
+        <p style="color:var(--color-gray-500);font-size:var(--font-size-sm);margin-bottom:var(--spacing-xl);">
+          Laden Sie die für die Bearbeitung Ihres Antrags erforderlichen Dokumente sicher hoch.
+        </p>
+
+        <!-- Message verrouillé / déverrouillé -->
+        <div id="upload-locked-msg" class="alert alert-warning" style="margin-bottom:var(--spacing-xl);">
+          <span>🔒</span>
+          <div>
+            <strong>Upload gesperrt</strong><br>
+            Ihr Antrag wird geprüft. Der Upload wird nach Genehmigung freigeschaltet.
+          </div>
+        </div>
+
+        <div id="upload-unlocked-msg" class="alert" style="display:none;margin-bottom:var(--spacing-xl);background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3);">
+          <span>✅</span>
+          <div>
+            <strong style="color:#15803d;">Upload freigeschaltet!</strong><br>
+            <span style="font-size:var(--font-size-sm);color:#15803d;">Ihr Antrag wurde genehmigt. Laden Sie jetzt Ihre Dokumente hoch.</span>
+          </div>
+        </div>
+
+        <!-- Sélecteur de type de document -->
+        <div class="form-group" id="upload-type-group" style="display:none;">
+          <label class="form-label" for="doc-type-select">Dokumenttyp <span class="required">*</span></label>
+          <select id="doc-type-select" class="form-control">
+            <option value="personalausweis">Personalausweis oder Reisepass (max. 5 MB)</option>
+            <option value="steuerbescheid">Steuerbescheid (max. 10 MB)</option>
+            <option value="gehaltsabrechnung">Gehaltsabrechnung (max. 5 MB je Datei)</option>
+            <option value="jahresabschluss">Jahresabschluss / EÜR (max. 10 MB)</option>
+            <option value="sonstige">Sonstige Unterlagen</option>
+          </select>
+        </div>
+
+        <!-- Zone de drop -->
+        <div class="doc-upload-zone locked" id="drop-zone">
+          <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" style="display:none;">
+          <div style="font-size:3rem;margin-bottom:var(--spacing-md);">📤</div>
+          <p style="font-weight:700;color:var(--color-primary);margin-bottom:var(--spacing-sm);">
+            Datei hierher ziehen oder klicken zum Auswählen
+          </p>
+          <p style="font-size:var(--font-size-xs);color:var(--color-gray-500);">
+            PDF, JPG, PNG — Max. 10 MB pro Datei
+          </p>
+        </div>
+
+        <!-- Barre de progression upload -->
+        <div class="upload-progress-wrap" id="upload-progress-wrap">
+          <div style="display:flex;justify-content:space-between;font-size:var(--font-size-xs);color:var(--color-gray-500);margin-bottom:4px;">
+            <span id="upload-filename">Datei.pdf</span>
+            <span id="upload-pct">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar-fill" id="upload-bar" style="width:0%;"></div>
+          </div>
+        </div>
+
+        <!-- Liste des documents existants -->
+        <div style="margin-top:var(--spacing-2xl);">
+          <h3 style="font-size:1rem;font-weight:700;color:var(--color-primary);margin-bottom:var(--spacing-lg);">
+            Hochgeladene Dokumente
+          </h3>
+          <div id="doc-list">
+            <p style="color:var(--color-gray-400);font-size:var(--font-size-sm);">Noch keine Dokumente hochgeladen.</p>
+          </div>
+        </div>
+
+      </div><!-- /panel-documents -->
+
+
+      <!-- ══ PANNEAU : HISTORIQUE ══ -->
+      <div class="client-panel" id="panel-history">
+
+        <h2 style="font-size:1.4rem;color:var(--color-primary);margin-bottom:var(--spacing-xl);">📜 Antragsverlauf</h2>
+
+        <div style="background:white;border-radius:var(--border-radius-2xl);padding:var(--spacing-2xl);box-shadow:var(--shadow-sm);margin-bottom:var(--spacing-xl);">
+          <h3 style="font-size:1rem;color:var(--color-primary);margin-bottom:var(--spacing-xl);">Statusverlauf</h3>
+          <div id="history-timeline" style="position:relative;">
+            <p style="color:var(--color-gray-400);">Wird geladen...</p>
+          </div>
+        </div>
+
+        <!-- Annulation du dossier -->
+        <div id="cancel-dossier-card" style="display:none;background:white;border-radius:var(--border-radius-xl);padding:var(--spacing-xl);box-shadow:var(--shadow-sm);border:1px solid rgba(239,68,68,0.15);">
+          <h3 style="font-size:1rem;color:var(--color-error);margin-bottom:var(--spacing-md);">⚠️ Antrag widerrufen</h3>
+          <p style="font-size:var(--font-size-sm);color:var(--color-gray-600);margin-bottom:var(--spacing-lg);">
+            Sie können Ihren Antrag widerrufen, solange er sich noch im Status <em>Eingereicht</em> oder <em>In Prüfung</em> befindet.
+          </p>
+          <div id="cancel-success" class="alert alert-success" style="display:none;margin-bottom:var(--spacing-md);">
+            <span>✅</span><div>Ihr Antrag wurde erfolgreich widerrufen.</div>
+          </div>
+          <button class="btn" style="background:rgba(239,68,68,0.08);color:var(--color-error);border:1px solid rgba(239,68,68,0.25);" onclick="ClientActions.cancelDossier()">
+            🗑️ Antrag widerrufen
+          </button>
+        </div>
+
+      </div>
+
+
+      <!-- ══ PANNEAU : PROFIL ══ -->
+      <div class="client-panel" id="panel-profile">
+
+        <h2 style="font-size:1.4rem;color:var(--color-primary);margin-bottom:var(--spacing-xl);">👤 Mein Profil</h2>
+
+        <div id="profile-success" class="alert alert-success" style="display:none;margin-bottom:var(--spacing-lg);">
+          <span>✅</span><div>Ihre Daten wurden erfolgreich aktualisiert.</div>
+        </div>
+
+        <div class="profile-section">
+          <h3>📋 Persönliche Daten</h3>
+          <form id="profile-form" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="p-vorname">Vorname</label>
+                <input type="text" id="p-vorname" name="vorname" class="form-control" autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="p-nachname">Nachname</label>
+                <input type="text" id="p-nachname" name="nachname" class="form-control" autocomplete="family-name">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="p-telefon">Telefon</label>
+                <input type="tel" id="p-telefon" name="telefon" class="form-control" autocomplete="tel">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="p-email">E-Mail</label>
+                <input type="email" id="p-email" class="form-control" disabled style="background:var(--color-bg-light);">
+                <span class="form-hint">E-Mail kann nicht geändert werden.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="p-strasse">Straße und Hausnummer</label>
+              <input type="text" id="p-strasse" name="strasse" class="form-control" autocomplete="street-address">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="p-plz">Postleitzahl</label>
+                <input type="text" id="p-plz" name="plz" class="form-control" maxlength="5">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="p-stadt">Stadt</label>
+                <input type="text" id="p-stadt" name="stadt" class="form-control" autocomplete="address-level2">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="profile-save-btn">
+              <span id="profile-save-label">💾 Änderungen speichern</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Informations bancaires (lecture seule) -->
+        <div class="profile-section">
+          <h3>🏦 Bankverbindung</h3>
+          <p style="font-size:var(--font-size-sm);color:var(--color-gray-500);margin-bottom:var(--spacing-lg);">
+            Für Änderungen Ihrer Bankverbindung kontaktieren Sie bitte unseren Support.
+          </p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-md);">
+            <div>
+              <div style="font-size:var(--font-size-xs);color:var(--color-gray-400);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">IBAN</div>
+              <div id="profile-iban" style="font-weight:600;color:var(--color-primary);font-size:var(--font-size-sm);">—</div>
+            </div>
+            <div>
+              <div style="font-size:var(--font-size-xs);color:var(--color-gray-400);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">BIC</div>
+              <div id="profile-bic" style="font-weight:600;color:var(--color-primary);font-size:var(--font-size-sm);">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section vérification identité -->
+        <div class="profile-section">
+          <h3>🛡️ Sicherheitsverifizierung</h3>
+          <p style="font-size:var(--font-size-sm);color:var(--color-gray-600);margin-bottom:var(--spacing-lg);line-height:1.6;">
+            Bestätigen Sie Ihre E-Mail-Adresse und Telefonnummer, um Ihr Konto vollständig zu sichern und alle Funktionen zu nutzen.
+          </p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-md);" id="verification-cards">
+
+            <!-- Email -->
+            <div id="email-verify-card" style="background:var(--color-bg-light);border-radius:var(--border-radius-xl);padding:var(--spacing-lg);border:2px solid var(--color-gray-200);transition:border-color 0.2s;">
+              <div style="display:flex;align-items:center;gap:var(--spacing-md);margin-bottom:var(--spacing-md);">
+                <div style="width:42px;height:42px;border-radius:12px;background:rgba(26,79,168,0.1);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">📧</div>
+                <div>
+                  <div style="font-weight:700;font-size:var(--font-size-sm);color:var(--color-primary);">E-Mail</div>
+                  <div id="email-verify-status" style="font-size:11px;font-weight:600;color:var(--color-gray-400);">Wird geprüft…</div>
+                </div>
+              </div>
+              <button id="email-otp-btn" onclick="OTPSystem.open('email', () => ProfileSecurity.refresh())"
+                      class="btn btn-sm" style="width:100%;background:rgba(26,79,168,0.08);color:var(--color-primary);border:1px solid rgba(26,79,168,0.2);">
+                Code senden
+              </button>
+            </div>
+
+            <!-- Téléphone -->
+            <div id="phone-verify-card" style="background:var(--color-bg-light);border-radius:var(--border-radius-xl);padding:var(--spacing-lg);border:2px solid var(--color-gray-200);transition:border-color 0.2s;">
+              <div style="display:flex;align-items:center;gap:var(--spacing-md);margin-bottom:var(--spacing-md);">
+                <div style="width:42px;height:42px;border-radius:12px;background:rgba(15,123,108,0.1);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">📱</div>
+                <div>
+                  <div style="font-weight:700;font-size:var(--font-size-sm);color:var(--color-primary);">Telefon</div>
+                  <div id="phone-verify-status" style="font-size:11px;font-weight:600;color:var(--color-gray-400);">Wird geprüft…</div>
+                </div>
+              </div>
+              <button id="phone-otp-btn" onclick="OTPSystem.open('phone', () => ProfileSecurity.refresh())"
+                      class="btn btn-sm" style="width:100%;background:rgba(15,123,108,0.08);color:var(--color-accent2);border:1px solid rgba(15,123,108,0.2);">
+                Code senden
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Barre de progression sécurité -->
+          <div style="margin-top:var(--spacing-lg);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:var(--font-size-xs);font-weight:600;color:var(--color-gray-500);">Sicherheitsstatus</span>
+              <span id="security-score-text" style="font-size:var(--font-size-xs);font-weight:700;color:var(--color-gray-500);">0/3</span>
+            </div>
+            <div style="height:8px;background:var(--color-gray-200);border-radius:999px;overflow:hidden;">
+              <div id="security-score-bar" style="height:100%;border-radius:999px;width:0%;transition:all 0.6s ease;background:linear-gradient(90deg,#ef4444,#D4A843,#10b981);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section changement de mot de passe -->
+        <div class="profile-section">
+          <h3>🔑 Passwort ändern</h3>
+
+          <div id="pwd-success" class="alert alert-success" style="display:none;margin-bottom:var(--spacing-lg);">
+            <span>✅</span><div>Passwort wurde erfolgreich geändert. Eine Bestätigungs-E-Mail wurde gesendet.</div>
+          </div>
+          <div id="pwd-error" class="alert alert-error" style="display:none;margin-bottom:var(--spacing-lg);">
+            <span>❌</span><div id="pwd-error-text"></div>
+          </div>
+
+          <form id="password-form" novalidate>
+            <div class="form-group" style="margin-bottom:var(--spacing-md);">
+              <label class="form-label" for="pwd-current">Aktuelles Passwort</label>
+              <div style="position:relative;">
+                <input type="password" id="pwd-current" class="form-control"
+                       placeholder="Ihr aktuelles Passwort" autocomplete="current-password">
+                <button type="button" class="pwd-toggle" onclick="togglePwd('pwd-current',this)"
+                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--color-gray-400);font-size:1.1rem;">👁</button>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:var(--spacing-sm);">
+              <label class="form-label" for="pwd-new">Neues Passwort</label>
+              <div style="position:relative;">
+                <input type="password" id="pwd-new" class="form-control"
+                       placeholder="Mindestens 8 Zeichen" autocomplete="new-password"
+                       oninput="checkPwdStrength(this.value)">
+                <button type="button" class="pwd-toggle" onclick="togglePwd('pwd-new',this)"
+                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--color-gray-400);font-size:1.1rem;">👁</button>
+              </div>
+              <!-- Barre de force -->
+              <div style="height:4px;border-radius:2px;background:var(--color-gray-200);margin-top:6px;overflow:hidden;">
+                <div id="pwd-strength-fill" style="height:100%;border-radius:2px;width:0;transition:all 0.3s;"></div>
+              </div>
+              <div id="pwd-strength-label" style="font-size:11px;font-weight:600;margin-top:3px;color:var(--color-gray-400);"></div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:var(--spacing-xl);">
+              <label class="form-label" for="pwd-confirm">Neues Passwort bestätigen</label>
+              <div style="position:relative;">
+                <input type="password" id="pwd-confirm" class="form-control"
+                       placeholder="Passwort wiederholen" autocomplete="new-password"
+                       oninput="checkPwdMatch()">
+                <button type="button" class="pwd-toggle" onclick="togglePwd('pwd-confirm',this)"
+                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--color-gray-400);font-size:1.1rem;">👁</button>
+              </div>
+              <div id="pwd-match-hint" style="font-size:11px;font-weight:600;margin-top:3px;"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="pwd-save-btn">
+              <span id="pwd-save-label">🔑 Passwort ändern</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Bannière vérification email -->
+        <div id="email-verify-banner" class="alert"
+             style="display:none;background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(245,158,11,0.04));border:1px solid rgba(245,158,11,0.3);border-radius:var(--border-radius-lg);padding:var(--spacing-md) var(--spacing-lg);gap:var(--spacing-md);align-items:center;margin-top:var(--spacing-lg);">
+          <span style="font-size:1.4rem;">⚠️</span>
+          <div style="flex:1;">
+            <strong style="color:#92400e;font-size:var(--font-size-sm);">E-Mail-Adresse nicht bestätigt</strong>
+            <p style="margin:2px 0 0;font-size:var(--font-size-xs);color:#a16207;">
+              Bitte bestätigen Sie Ihre E-Mail-Adresse, um alle Funktionen zu nutzen.
+            </p>
+          </div>
+          <button class="btn btn-sm" id="resend-verify-btn" onclick="ClientProfile.resendVerification()"
+                  style="background:rgba(245,158,11,0.15);color:#92400e;border:1px solid rgba(245,158,11,0.3);white-space:nowrap;">
+            Erneut senden
+          </button>
+        </div>
+
+      </div><!-- /panel-profile -->
+
+
+
+
+      <!-- ══ PANNEAU : MESSAGES ══ -->
+      <div class="client-panel" id="panel-messages">
+
+        <h2 style="font-size:1.4rem;color:var(--color-primary);margin-bottom:var(--spacing-xl);">💬 Nachrichten</h2>
+
+        <div id="no-dossier-msg-info" style="display:none;background:white;border-radius:var(--border-radius-xl);padding:var(--spacing-2xl);box-shadow:var(--shadow-sm);text-align:center;color:var(--color-gray-400);">
+          <div style="font-size:2rem;margin-bottom:var(--spacing-md);">📋</div>
+          Nachrichten sind nach Einreichen Ihres Antrags verfügbar.
+        </div>
+
+        <div id="messages-container" style="display:none;">
+          <!-- Fil de messages -->
+          <div id="messages-feed" style="background:white;border-radius:var(--border-radius-2xl);padding:var(--spacing-xl);box-shadow:var(--shadow-sm);min-height:200px;max-height:min(500px,55dvh);overflow-y:auto;margin-bottom:var(--spacing-lg);display:flex;flex-direction:column;gap:var(--spacing-md);">
+            <p style="color:var(--color-gray-400);text-align:center;">Wird geladen...</p>
+          </div>
+
+          <!-- Zone de saisie -->
+          <div style="background:white;border-radius:var(--border-radius-xl);padding:var(--spacing-lg);box-shadow:var(--shadow-sm);">
+            <textarea id="msg-input" rows="3" class="form-control" placeholder="Schreiben Sie Ihre Nachricht…"
+                      style="resize:vertical;min-height:80px;margin-bottom:var(--spacing-md);"
+                      maxlength="2000" oninput="document.getElementById('msg-char-count').textContent=this.value.length+'/2000'">
+            </textarea>
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--spacing-md);">
+              <span id="msg-char-count" style="font-size:var(--font-size-xs);color:var(--color-gray-400);">0/2000</span>
+              <button class="btn btn-primary" id="msg-send-btn" onclick="ClientMessages.send()">
+                <span id="msg-send-label">📤 Senden</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /panel-messages -->
+
+
+      <!-- ══ PANNEAU : NOTIFICATIONS ══ -->
+      <div class="client-panel" id="panel-notifications">
+
+        <h2 style="font-size:1.4rem;color:var(--color-primary);margin-bottom:var(--spacing-xl);">🔔 Benachrichtigungen</h2>
+
+        <div id="notif-list">
+          <div style="background:var(--color-white);border-radius:var(--border-radius-xl);padding:var(--spacing-2xl);box-shadow:var(--shadow-sm);text-align:center;">
+            <div style="font-size:3rem;margin-bottom:var(--spacing-lg);">🔔</div>
+            <p style="color:var(--color-gray-500);">Alle Benachrichtigungen werden hier angezeigt,<br>sobald sich der Status Ihres Antrags ändert.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </main><!-- /client-main -->
+  </div><!-- /client-inner -->
+</div><!-- /client-page -->
+
+<!-- ══ MOBILE BOTTOM NAVIGATION (client) ══════════════════════ -->
+<nav class="client-mobile-nav" role="navigation" aria-label="Konto-Navigation Mobile">
+  <button class="client-mobile-nav-item active" data-panel="dashboard" onclick="MobileClientNav.go('dashboard', this)">
+    <span class="cnav-icon">📊</span>
+    <span>Übersicht</span>
+  </button>
+  <button class="client-mobile-nav-item" data-panel="dossier" onclick="MobileClientNav.go('dossier', this)">
+    <span class="cnav-icon">📋</span>
+    <span>Antrag</span>
+  </button>
+  <button class="client-mobile-nav-item" data-panel="documents" onclick="MobileClientNav.go('documents', this)">
+    <span class="cnav-icon">📎</span>
+    <span>Dokumente</span>
+  </button>
+  <button class="client-mobile-nav-item" data-panel="profile" onclick="MobileClientNav.go('profile', this)">
+    <span class="cnav-icon">👤</span>
+    <span>Profil</span>
+  </button>
+  <button class="client-mobile-nav-item" data-panel="messages" onclick="MobileClientNav.go('messages', this)">
+    <span class="cnav-icon">💬</span>
+    <span>Nachrichten</span>
+  </button>
+  <button class="client-mobile-nav-item" data-panel="notifications" onclick="MobileClientNav.go('notifications', this)">
+    <span class="cnav-icon">🔔</span>
+    <span>Infos</span>
+  </button>
+</nav>
+
+<script>
+const MobileClientNav = {
+  go(panelId, btn) {
+    // Sync avec la navigation desktop existante
+    const desktopLink = document.querySelector(`.client-nav-link[data-panel="${panelId}"]`);
+    if (desktopLink) desktopLink.click();
+    // Mettre à jour l'état actif de la nav mobile
+    document.querySelectorAll('.client-mobile-nav-item').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    // Scroll vers le haut du contenu
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
+
+// Synchroniser la nav mobile quand on clique sur un lien desktop
+document.querySelectorAll('.client-nav-link[data-panel]').forEach(link => {
+  link.addEventListener('click', () => {
+    const panelId = link.dataset.panel;
+    document.querySelectorAll('.client-mobile-nav-item').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.panel === panelId);
+    });
+  });
+});
+</script>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
+<script src="assets/js/loader.js"></script>
+<script src="assets/js/config.js"></script>
+<script defer src="assets/js/ui.js"></script>
+<script defer src="assets/js/animations.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/otp.js"></script>
+<script defer src="assets/js/client.js"></script>
+<script>
+// ── Helpers mot de passe ──────────────────────────────────────────
+function togglePwd(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isText = input.type === 'text';
+  input.type = isText ? 'password' : 'text';
+  btn.textContent = isText ? '👁' : '🙈';
+}
+
+function checkPwdStrength(val) {
+  const fill  = document.getElementById('pwd-strength-fill');
+  const label = document.getElementById('pwd-strength-label');
+  if (!fill) return;
+  let score = 0;
+  if (val.length >= 8)  score++;
+  if (val.length >= 12) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const levels = [
+    { pct:'0%',   col:'transparent',              txt:'' },
+    { pct:'25%',  col:'var(--color-error)',        txt:'Sehr schwach' },
+    { pct:'50%',  col:'var(--color-warning)',      txt:'Schwach' },
+    { pct:'75%',  col:'var(--color-info)',         txt:'Gut' },
+    { pct:'90%',  col:'var(--color-success)',      txt:'Stark' },
+    { pct:'100%', col:'#16a34a',                   txt:'Sehr stark ✓' }
+  ];
+  const l = levels[Math.min(score, 5)];
+  fill.style.width      = l.pct;
+  fill.style.background = l.col;
+  label.textContent     = l.txt;
+  label.style.color     = l.col;
+  checkPwdMatch();
+}
+
+function checkPwdMatch() {
+  const nw   = document.getElementById('pwd-new')?.value     || '';
+  const conf = document.getElementById('pwd-confirm')?.value || '';
+  const hint = document.getElementById('pwd-match-hint');
+  if (!hint || !conf) return;
+  const match = nw === conf;
+  hint.textContent = match ? '✓ Passwörter stimmen überein' : '✗ Passwörter stimmen nicht überein';
+  hint.style.color = match ? 'var(--color-success)' : 'var(--color-error)';
+}
+
+// ══ MESSAGES CLIENT ═══════════════════════════════════════════
+const ClientMessages = {
+
+  dossierId: null,
+
+  async init(dossierId) {
+    this.dossierId = dossierId;
+    const container = document.getElementById('messages-container');
+    const noInfo    = document.getElementById('no-dossier-msg-info');
+    if (!dossierId) {
+      if (noInfo)    noInfo.style.display    = 'block';
+      if (container) container.style.display = 'none';
+      return;
+    }
+    if (noInfo)    noInfo.style.display    = 'none';
+    if (container) container.style.display = 'block';
+    await this.loadMessages();
+  },
+
+  async loadMessages() {
+    if (!this.dossierId) return;
+    const feed = document.getElementById('messages-feed');
+    try {
+      const data = await window.API.dossiers.getMessages(this.dossierId);
+      const msgs = data.messages || [];
+      if (!msgs.length) {
+        feed.innerHTML = '<p style="color:var(--color-gray-400);text-align:center;margin:auto;">Noch keine Nachrichten. Stellen Sie hier Ihre Fragen.</p>';
+        return;
+      }
+      feed.innerHTML = msgs.map(m => this.renderMessage(m)).join('');
+      feed.scrollTop = feed.scrollHeight;
+      // Mise à jour badge
+      document.getElementById('sidebar-msg-badge').style.display = 'none';
+    } catch (err) {
+      feed.innerHTML = '<p style="color:var(--color-error);text-align:center;">Fehler beim Laden.</p>';
+    }
+  },
+
+  renderMessage(m) {
+    const isAdmin  = m.senderRole === 'admin';
+    const align    = isAdmin ? 'flex-start' : 'flex-end';
+    const bg       = isAdmin ? 'linear-gradient(135deg,#f0f4ff,#e8eeff)' : 'linear-gradient(135deg,#0B1D3A,#1A4FA8)';
+    const color    = isAdmin ? 'var(--color-primary)' : 'white';
+    const name     = isAdmin ? '👨‍💼 Berater' : '👤 Ich';
+    const time     = new Date(m.createdAt).toLocaleString('de-DE', { day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit' });
+    return `<div style="display:flex;flex-direction:column;align-items:${align};max-width:85%;${isAdmin?'':'margin-left:auto'}">
+      <div style="font-size:10px;color:var(--color-gray-400);margin-bottom:4px;font-weight:600;">${name} · ${time}</div>
+      <div style="background:${bg};color:${color};padding:12px 16px;border-radius:${isAdmin?'4px 16px 16px 16px':'16px 4px 16px 16px'};font-size:var(--font-size-sm);line-height:1.6;box-shadow:var(--shadow-sm);">
+        ${m.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}
+      </div>
+    </div>`;
+  },
+
+  async send() {
+    const input = document.getElementById('msg-input');
+    const btn   = document.getElementById('msg-send-btn');
+    const label = document.getElementById('msg-send-label');
+    const content = input?.value?.trim();
+
+    if (!content || !this.dossierId) return;
+    if (content.length > 2000) { window.Toast?.error('Nachricht zu lang.'); return; }
+
+    btn.disabled = true;
+    label.textContent = 'Wird gesendet…';
+    try {
+      await window.API.dossiers.sendMessage(this.dossierId, content);
+      input.value = '';
+      document.getElementById('msg-char-count').textContent = '0/2000';
+      await this.loadMessages();
+    } catch (err) {
+      window.Toast?.error(err.message || 'Fehler beim Senden.');
+    } finally {
+      btn.disabled = false;
+      label.textContent = '📤 Senden';
+    }
+  }
+};
+
+// Ctrl+Enter pour envoyer
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('msg-input')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.ctrlKey) ClientMessages.send();
+  });
+});
+
+// ══ HISTORIQUE STATUT + ANNULATION ════════════════════════════════
+const ClientActions = {
+
+  dossierId: null,
+
+  renderHistory(statusHistory) {
+    const container = document.getElementById('history-timeline');
+    if (!container) return;
+
+    const STATUS_LABELS = {
+      pending:   { icon: '📨', label: 'Eingereicht',   color: '#3b82f6' },
+      review:    { icon: '🔍', label: 'In Prüfung',    color: '#f59e0b' },
+      approved:  { icon: '✅', label: 'Genehmigt',     color: '#10b981' },
+      refused:   { icon: '❌', label: 'Abgelehnt',     color: '#ef4444' },
+      cancelled: { icon: '🚫', label: 'Widerrufen',    color: '#6b7280' }
+    };
+
+    if (!statusHistory || !statusHistory.length) {
+      container.innerHTML = '<p style="color:var(--color-gray-400);">Kein Verlauf vorhanden.</p>';
+      return;
+    }
+
+    container.innerHTML = statusHistory.map((entry, i) => {
+      const s    = STATUS_LABELS[entry.status] || { icon: '•', label: entry.status, color: '#6b7280' };
+      const date = new Date(entry.createdAt).toLocaleString('de-DE', { day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit' });
+      const isLast = i === statusHistory.length - 1;
+      return `
+        <div style="display:flex;gap:var(--spacing-md);position:relative;padding-bottom:${isLast?'0':'var(--spacing-xl)'};">
+          ${!isLast ? `<div style="position:absolute;left:20px;top:40px;bottom:0;width:2px;background:var(--color-gray-200);"></div>` : ''}
+          <div style="width:40px;height:40px;min-width:40px;border-radius:50%;background:${s.color}20;border:2px solid ${s.color};display:flex;align-items:center;justify-content:center;font-size:1rem;z-index:1;">${s.icon}</div>
+          <div style="padding-top:6px;">
+            <div style="font-weight:700;color:${s.color};font-size:var(--font-size-base);">${s.label}</div>
+            <div style="font-size:var(--font-size-xs);color:var(--color-gray-400);margin-top:2px;">${date}</div>
+            ${entry.note ? `<div style="font-size:var(--font-size-sm);color:var(--color-gray-600);margin-top:4px;font-style:italic;">"${entry.note}"</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  },
+
+  showCancelCard(status) {
+    const card = document.getElementById('cancel-dossier-card');
+    if (!card) return;
+    card.style.display = ['pending', 'review'].includes(status) ? 'block' : 'none';
+  },
+
+  async cancelDossier() {
+    if (!this.dossierId) return;
+    if (!confirm('Möchten Sie Ihren Antrag wirklich widerrufen? Diese Aktion kann nicht rückgängig gemacht werden.')) return;
+
+    try {
+      await window.API.dossiers.cancel(this.dossierId, 'Vom Kunden widerrufen');
+      document.getElementById('cancel-success').style.display = 'flex';
+      document.getElementById('cancel-dossier-card').querySelector('button').style.display = 'none';
+      // Recharger les données
+      await ClientData.init();
+      window.Toast?.success('Ihr Antrag wurde widerrufen.');
+    } catch (err) {
+      window.Toast?.error(err.message || 'Fehler beim Widerrufen.');
+    }
+  }
+};
+
+// ══ SÉCURITÉ PROFIL (OTP status) ════════════════════════════════
+const ProfileSecurity = {
+
+  update(user) {
+    if (!user) return;
+    let score = 1; // password always ok (logged in)
+
+    // Email
+    const emailCard   = document.getElementById('email-verify-card');
+    const emailStatus = document.getElementById('email-verify-status');
+    const emailBtn    = document.getElementById('email-otp-btn');
+    if (user.emailVerified) {
+      if (emailCard)   { emailCard.style.borderColor = '#10b981'; emailCard.style.background = '#f0fdf4'; }
+      if (emailStatus) { emailStatus.textContent = '✅ Bestätigt'; emailStatus.style.color = '#10b981'; }
+      if (emailBtn)    { emailBtn.textContent = '✅ Verifiziert'; emailBtn.disabled = true; emailBtn.style.opacity = '0.6'; }
+      score++;
+    } else {
+      if (emailCard)   { emailCard.style.borderColor = '#fbbf24'; emailCard.style.background = '#fffbeb'; }
+      if (emailStatus) { emailStatus.textContent = '⚠️ Nicht bestätigt'; emailStatus.style.color = '#d97706'; }
+      if (emailBtn)    { emailBtn.textContent = '📧 Code senden'; emailBtn.disabled = false; }
+    }
+
+    // Téléphone
+    const phoneCard   = document.getElementById('phone-verify-card');
+    const phoneStatus = document.getElementById('phone-verify-status');
+    const phoneBtn    = document.getElementById('phone-otp-btn');
+    if (user.phoneVerified) {
+      if (phoneCard)   { phoneCard.style.borderColor = '#10b981'; phoneCard.style.background = '#f0fdf4'; }
+      if (phoneStatus) { phoneStatus.textContent = '✅ Bestätigt'; phoneStatus.style.color = '#10b981'; }
+      if (phoneBtn)    { phoneBtn.textContent = '✅ Verifiziert'; phoneBtn.disabled = true; phoneBtn.style.opacity = '0.6'; }
+      score++;
+    } else {
+      const hasTel = user.telefon && user.telefon.trim();
+      if (phoneCard)   { phoneCard.style.borderColor = hasTel ? '#fbbf24' : '#e5e7eb'; }
+      if (phoneStatus) { phoneStatus.textContent = hasTel ? '⚠️ Nicht bestätigt' : '— Keine Nummer'; phoneStatus.style.color = hasTel ? '#d97706' : '#9ca3af'; }
+      if (phoneBtn)    { phoneBtn.textContent = hasTel ? '📱 Code senden' : '📱 Nummer eingeben'; }
+    }
+
+    // Barre de progression
+    const bar  = document.getElementById('security-score-bar');
+    const text = document.getElementById('security-score-text');
+    const pct  = Math.round(score / 3 * 100);
+    const colors = { 33: '#ef4444', 67: '#f59e0b', 100: '#10b981' };
+    const col  = pct <= 33 ? '#ef4444' : pct <= 66 ? '#f59e0b' : '#10b981';
+    if (bar)  { bar.style.width = pct + '%'; bar.style.background = col; }
+    if (text) { text.textContent = score + '/3'; text.style.color = col; }
+
+    // Bannière email non vérifié (existante)
+    const banner = document.getElementById('email-verify-banner');
+    if (banner) banner.style.display = user.emailVerified ? 'none' : 'flex';
+  },
+
+  refresh() {
+    // Recharger le profil depuis l'API et mettre à jour
+    window.API.auth.me().then(data => {
+      if (data.user) {
+        ClientState.user = data.user;
+        this.update(data.user);
+        if (window.KP?.USER_KEY) localStorage.setItem(window.KP.USER_KEY, JSON.stringify(data.user));
+      }
+    }).catch(() => {});
+  }
+};
+
+// ── Formulaire changement de mot de passe ─────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const pwdForm = document.getElementById('password-form');
+  if (!pwdForm) return;
+
+  pwdForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const current = document.getElementById('pwd-current').value;
+    const newPwd  = document.getElementById('pwd-new').value;
+    const confirm = document.getElementById('pwd-confirm').value;
+    const successEl = document.getElementById('pwd-success');
+    const errorEl   = document.getElementById('pwd-error');
+    const errorText = document.getElementById('pwd-error-text');
+    const btn       = document.getElementById('pwd-save-btn');
+    const label     = document.getElementById('pwd-save-label');
+
+    successEl.style.display = 'none';
+    errorEl.style.display   = 'none';
+
+    if (!current) { errorText.textContent = 'Bitte aktuelles Passwort eingeben.'; errorEl.style.display = 'flex'; return; }
+    if (newPwd.length < 8) { errorText.textContent = 'Neues Passwort muss mindestens 8 Zeichen haben.'; errorEl.style.display = 'flex'; return; }
+    if (newPwd !== confirm) { errorText.textContent = 'Die neuen Passwörter stimmen nicht überein.'; errorEl.style.display = 'flex'; return; }
+    if (current === newPwd) { errorText.textContent = 'Das neue Passwort muss sich vom aktuellen unterscheiden.'; errorEl.style.display = 'flex'; return; }
+
+    btn.disabled = true;
+    label.textContent = 'Wird gespeichert…';
+
+    try {
+      await window.API.client.changePassword({
+        currentPassword: current,
+        newPassword: newPwd,
+        confirmPassword: confirm
+      });
+      successEl.style.display = 'flex';
+      pwdForm.reset();
+      // Reset force bar
+      const fill = document.getElementById('pwd-strength-fill');
+      const lbl  = document.getElementById('pwd-strength-label');
+      if (fill) fill.style.width = '0';
+      if (lbl)  lbl.textContent  = '';
+      document.getElementById('pwd-match-hint').textContent = '';
+    } catch (err) {
+      errorText.textContent = err.message || 'Fehler. Bitte versuchen Sie es erneut.';
+      errorEl.style.display = 'flex';
+    } finally {
+      btn.disabled = false;
+      label.textContent = '🔑 Passwort ändern';
+    }
+  });
+});
+</script>
+
+</body>
+</html>

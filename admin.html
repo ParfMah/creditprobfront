@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<style id="critical-css">
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden;scroll-behavior:smooth}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  #page-loader{position:fixed;inset:0;z-index:99999;background:#0B1D3A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .45s ease,visibility .45s ease}
+  #page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .loader-logo{display:flex;align-items:center;gap:12px}
+  .loader-logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#D4A843,#b5882a);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .loader-logo-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff}
+  .loader-logo-text span{display:block;font-size:.65rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .loader-spinner-wrap{position:relative;width:56px;height:56px}
+  .loader-spinner{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.08);border-top-color:#D4A843;border-right-color:rgba(212,168,67,.4);animation:spin .9s cubic-bezier(.45,.05,.55,.95) infinite}
+  .loader-spinner-inner{position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,255,255,.04);border-bottom-color:rgba(212,168,67,.6);animation:spin 1.4s cubic-bezier(.45,.05,.55,.95) infinite reverse}
+  .loader-progress-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .loader-progress-fill{height:100%;background:linear-gradient(90deg,#D4A843,#e8c96a,#D4A843);background-size:200% 100%;border-radius:99px;animation:prog 1.2s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes prog{0%{background-position:200% 0;width:20%}50%{background-position:0% 0;width:80%}100%{background-position:-200% 0;width:100%}}
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center}
+</style>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#D4A843">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration – KreditProfi Deutschland</title>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/loader.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <style>
+    /* ── LAYOUT ADMIN ── */
+    body { background: var(--color-bg-light); }
+
+    .admin-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .adm-sidebar {
+      width: 240px;
+      min-width: 240px;
+      background: var(--color-primary);
+      min-height: 100vh;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: var(--z-fixed);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      transition: transform var(--transition-base);
+    }
+
+    .adm-sidebar-header {
+      padding: var(--spacing-xl);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .adm-sidebar-nav { flex: 1; padding: var(--spacing-md) 0; }
+
+    .adm-nav-section {
+      padding: var(--spacing-md) var(--spacing-lg) 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .adm-nav-link {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: 11px var(--spacing-xl);
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+
+    .adm-nav-link:hover { color: white; background: rgba(255,255,255,0.06); }
+
+    .adm-nav-link.active {
+      color: white;
+      background: rgba(201,168,76,0.1);
+      border-left-color: var(--color-secondary);
+    }
+
+    .adm-nav-icon { font-size: 16px; min-width: 20px; text-align: center; }
+
+    .adm-badge {
+      margin-left: auto;
+      background: var(--color-error);
+      color: white;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 99px;
+      font-weight: 700;
+    }
+
+    /* Zone principale */
+    .adm-main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .adm-topbar {
+      background: white;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--spacing-2xl);
+      border-bottom: 1px solid var(--color-gray-200);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .adm-page-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .adm-content { padding: var(--spacing-2xl); }
+
+    /* Panneaux */
+    .adm-panel { display: none; animation: fadeIn 0.3s ease; }
+    .adm-panel.active { display: block; }
+
+    /* Stats grid */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    /* Card blanche générique */
+    .adm-card {
+      background: white;
+      border-radius: var(--border-radius-xl);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .adm-card-title {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-md);
+    }
+
+    /* Tableau admin */
+    .adm-table-wrap { overflow-x: auto; border-radius: var(--border-radius-lg); }
+
+    .adm-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      font-size: var(--font-size-sm);
+    }
+
+    .adm-table th {
+      background: var(--color-bg-light);
+      color: var(--color-gray-600);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 2px solid var(--color-gray-200);
+    }
+
+    .adm-table td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--color-gray-100);
+      color: var(--color-gray-700);
+      vertical-align: middle;
+    }
+
+    .adm-table tr:hover td { background: rgba(30,58,138,0.02); }
+    .adm-table tr:last-child td { border-bottom: none; }
+
+    /* Filtres */
+    .adm-filters {
+      display: flex;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .adm-filter-select {
+      padding: 8px 14px;
+      border: 1px solid var(--color-gray-300);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-700);
+      background: white;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .adm-search {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 16px;
+      border: 1px solid var(--color-gray-300);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-sm);
+      font-family: var(--font-body);
+    }
+
+    .adm-search:focus, .adm-filter-select:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(30,58,138,0.1);
+    }
+
+    /* Modal dossier détail */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .detail-item .lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-gray-400);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .detail-item .val {
+      font-weight: 600;
+      color: var(--color-primary);
+      font-size: var(--font-size-sm);
+    }
+
+    /* CMS accordion */
+    .cms-section {
+      background: white;
+      border-radius: var(--border-radius-xl);
+      overflow: hidden;
+      margin-bottom: var(--spacing-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cms-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-lg) var(--spacing-xl);
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--color-primary);
+      transition: background var(--transition-fast);
+    }
+
+    .cms-section-header:hover { background: var(--color-bg-light); }
+    .cms-section-body { display: none; padding: var(--spacing-xl); border-top: 1px solid var(--color-gray-200); }
+    .cms-section.open .cms-section-body { display: block; }
+
+    /* Textarea CMS */
+    .cms-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--color-gray-300);
+      border-radius: var(--border-radius-md);
+      font-family: var(--font-body);
+      font-size: var(--font-size-sm);
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color var(--transition-fast);
+    }
+
+    .cms-textarea:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(30,58,138,0.1);
+    }
+
+    /* Toggle sidebar mobile */
+    .adm-toggle-btn {
+      display: none;
+      position: fixed;
+      top: 12px; left: 12px;
+      z-index: calc(var(--z-fixed) + 1);
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius-md);
+      width: 40px; height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 1024px) {
+      .adm-sidebar    { transform: translateX(-100%); }
+      .adm-sidebar.open { transform: translateX(0); }
+      .adm-main       { margin-left: 0; }
+      .adm-toggle-btn { display: flex; }
+      .adm-topbar     { padding-left: 60px; padding-right: var(--spacing-lg); }
+      .stats-row      { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .adm-content    { padding: var(--spacing-lg); }
+      .adm-card-title { flex-direction: column; align-items: flex-start; gap: var(--spacing-sm); }
+      .adm-table th, .adm-table td { padding: 10px 12px; }
+      .adm-page-title { font-size: var(--font-size-base); }
+      .adm-topbar     { padding-left: 56px; padding-right: var(--spacing-md); }
+    }
+
+    @media (max-width: 600px) {
+      .stats-row      { grid-template-columns: 1fr; }
+      .detail-grid    { grid-template-columns: 1fr; }
+      .adm-content    { padding: var(--spacing-md); }
+      .adm-filters    { flex-direction: column; }
+      .adm-search     { min-width: unset; width: 100%; }
+      .adm-filter-select { width: 100%; }
+      .cms-section-header { padding: var(--spacing-md) var(--spacing-lg); font-size: var(--font-size-sm); }
+    }
+
+    @media (max-width: 375px) {
+      .adm-toggle-btn { width: 36px; height: 36px; font-size: 16px; top: 10px; left: 10px; }
+      .adm-topbar     { padding-left: 52px; }
+    }
+  </style>
+
+</head>
+<body class="admin-bg">
+<script>
+(function(){
+  // Retour navigateur (bfcache) : enlève tout masquage résiduel instantanément
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted){
+      document.body.style.visibility = '';
+      document.body.style.opacity = '';
+      document.body.classList.remove('css-loading');
+      var l = document.getElementById('page-loader');
+      if(l){ l.style.opacity='0'; l.style.visibility='hidden'; if(l.parentNode) l.parentNode.removeChild(l); }
+    }
+  });
+})();
+</script>
+
+<!-- Bouton toggle mobile -->
+<button class="adm-toggle-btn" id="adm-toggle" aria-label="Menü öffnen">☰</button>
+<div class="adm-sidebar-overlay" id="adm-overlay" onclick="closeSidebar()"></div>
+
+<div class="admin-wrap">
+
+  <!-- ══ SIDEBAR ═════════════════════════════════════════════ -->
+  <aside class="adm-sidebar" id="adm-sidebar">
+
+    <div class="adm-sidebar-header">
+      <a href="index.html" class="logo" style="text-decoration:none;">
+        <img src="assets/img/logo.svg" alt="KreditProfi" class="logo-img" style="height:32px;width:auto;filter:brightness(1);">
+        <div class="logo-text" style="color:white;font-size:1rem;">KreditProfi<span>Admin</span></div>
+      </a>
+    </div>
+
+    <nav class="adm-sidebar-nav">
+
+      <div class="adm-nav-section">Übersicht</div>
+      <div class="adm-nav-link active" data-panel="dashboard">
+        <span class="adm-nav-icon">📊</span> Dashboard
+      </div>
+
+      <div class="adm-nav-section">Verwaltung</div>
+      <div class="adm-nav-link" data-panel="dossiers">
+        <span class="adm-nav-icon">📋</span> Kreditanträge
+        <span class="adm-badge" id="pending-badge" style="display:none;">0</span>
+      </div>
+      <div class="adm-nav-link" data-panel="clients">
+        <span class="adm-nav-icon">👥</span> Kunden
+      </div>
+      <div class="adm-nav-link" data-panel="messages">
+        <span class="adm-nav-icon">✉️</span> Nachrichten
+        <span class="adm-badge" id="msg-badge" style="display:none;">0</span>
+      </div>
+
+      <div class="adm-nav-section">Inhalte</div>
+      <div class="adm-nav-link" data-panel="cms">
+        <span class="adm-nav-icon">✏️</span> CMS Inhalte
+      </div>
+
+      <div class="adm-nav-section">System</div>
+      <div class="adm-nav-link" data-panel="settings">
+        <span class="adm-nav-icon">⚙️</span> Einstellungen
+      </div>
+
+      <div style="margin-top:var(--spacing-2xl);padding:0 var(--spacing-xl);">
+        <a href="index.html" class="adm-nav-link" style="border-radius:var(--border-radius-md);padding:10px var(--spacing-md);">
+          <span class="adm-nav-icon">🏠</span> Zur Website
+        </a>
+        <div class="adm-nav-link" onclick="window.KP?.logout()" style="cursor:pointer;color:rgba(239,68,68,0.7);">
+          <span class="adm-nav-icon">🚪</span> Abmelden
+        </div>
+      </div>
+
+    </nav>
+  </aside>
+
+  <!-- ══ ZONE PRINCIPALE ═════════════════════════════════════ -->
+  <main class="adm-main">
+
+    <!-- Topbar -->
+    <div class="adm-topbar">
+      <div class="adm-page-title" id="adm-page-title">📊 Dashboard</div>
+      <div style="display:flex;align-items:center;gap:var(--spacing-lg);">
+        <span style="font-size:var(--font-size-sm);color:var(--color-gray-500);" id="adm-user-name">Admin</span>
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--color-primary);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;">A</div>
+      </div>
+    </div>
+
+    <div class="adm-content">
+
+      <!-- ══ PANNEAU DASHBOARD ══ -->
+      <div class="adm-panel active" id="panel-dashboard">
+
+        <!-- Cartes statistiques -->
+        <div class="stats-row" id="stats-row">
+          <div class="admin-stat-card stat-blue">
+            <div class="admin-stat-icon">📋</div>
+            <div><div class="admin-stat-label">Gesamt Anträge</div><div class="admin-stat-value" id="stat-total">—</div></div>
+          </div>
+          <div class="admin-stat-card stat-gold">
+            <div class="admin-stat-icon">⏳</div>
+            <div><div class="admin-stat-label">In Bearbeitung</div><div class="admin-stat-value" id="stat-pending">—</div></div>
+          </div>
+          <div class="admin-stat-card stat-green">
+            <div class="admin-stat-icon">✅</div>
+            <div><div class="admin-stat-label">Genehmigt</div><div class="admin-stat-value" id="stat-approved">—</div></div>
+          </div>
+          <div class="admin-stat-card stat-red">
+            <div class="admin-stat-icon">❌</div>
+            <div><div class="admin-stat-label">Abgelehnt</div><div class="admin-stat-value" id="stat-refused">—</div></div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--spacing-lg);margin-bottom:var(--spacing-2xl);">
+          <div class="admin-stat-card stat-blue">
+            <div class="admin-stat-icon">👥</div>
+            <div><div class="admin-stat-label">Neue Kunden (7 Tage)</div><div class="admin-stat-value" id="stat-new-clients">—</div></div>
+          </div>
+          <div class="admin-stat-card stat-gold">
+            <div class="admin-stat-icon">💶</div>
+            <div><div class="admin-stat-label">Gesamtvolumen</div><div class="admin-stat-value" id="stat-volume" style="font-size:1.1rem;">—</div></div>
+          </div>
+          <div class="admin-stat-card stat-green">
+            <div class="admin-stat-icon">✉️</div>
+            <div><div class="admin-stat-label">Neue Nachrichten</div><div class="admin-stat-value" id="stat-messages">—</div></div>
+          </div>
+        </div>
+
+        <!-- Graphiques -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:var(--spacing-xl);">
+
+          <!-- Évolution mensuelle -->
+          <div class="adm-card">
+            <div class="adm-card-title">
+              📈 Monatliche Antragsübersicht (12 Monate)
+            </div>
+            <canvas id="chart-monthly" height="250" aria-label="Monatliche Anträge"></canvas>
+          </div>
+
+          <!-- Répartition par type -->
+          <div class="adm-card">
+            <div class="adm-card-title">🥧 Verteilung nach Kreditart</div>
+            <canvas id="chart-types" height="250" aria-label="Verteilung Kreditarten"></canvas>
+            <div id="chart-types-legend" style="margin-top:var(--spacing-md);"></div>
+          </div>
+
+        </div>
+
+      </div><!-- /panel-dashboard -->
+
+
+      <!-- ══ PANNEAU DOSSIERS ══ -->
+      <div class="adm-panel" id="panel-dossiers">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-xl);flex-wrap:wrap;gap:1rem;">
+          <h2 style="font-size:1.3rem;color:var(--color-primary);">📋 Kreditanträge verwalten</h2>
+          <span id="dossiers-count" style="font-size:var(--font-size-sm);color:var(--color-gray-500);"></span>
+        </div>
+
+        <!-- Filtres -->
+        <div class="adm-filters">
+          <input type="text" class="adm-search" id="dossier-search" placeholder="🔍 Suche nach Name, E-Mail, Antragsnummer...">
+          <select class="adm-filter-select" id="filter-status">
+            <option value="">Alle Status</option>
+            <option value="pending">In Bearbeitung</option>
+            <option value="review">In Prüfung</option>
+            <option value="approved">Genehmigt</option>
+            <option value="refused">Abgelehnt</option>
+          </select>
+          <select class="adm-filter-select" id="filter-type">
+            <option value="">Alle Kreditarten</option>
+            <option value="privatkredit">Privatkredit</option>
+            <option value="immobilienkredit">Immobilienkredit</option>
+            <option value="autokredit">Autokredit</option>
+            <option value="hypothekendarlehen">Hypothekendarlehen</option>
+            <option value="kreditrueckkauf">Kreditrückkauf</option>
+          </select>
+          <button class="btn btn-primary btn-sm" id="btn-refresh-dossiers">🔄 Aktualisieren</button>
+        </div>
+
+        <div class="adm-card" style="padding:0;">
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>Antragsnummer</th>
+                  <th>Kunde</th>
+                  <th>Kreditart</th>
+                  <th>Betrag</th>
+                  <th>Status</th>
+                  <th>Datum</th>
+                  <th>Aktionen</th>
+                </tr>
+              </thead>
+              <tbody id="dossiers-tbody">
+                <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--color-gray-400);">Wird geladen...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div id="dossiers-pagination" class="pagination" style="margin-top:var(--spacing-xl);"></div>
+
+      </div><!-- /panel-dossiers -->
+
+
+      <!-- ══ PANNEAU CLIENTS ══ -->
+      <div class="adm-panel" id="panel-clients">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-xl);flex-wrap:wrap;gap:1rem;">
+          <h2 style="font-size:1.3rem;color:var(--color-primary);">👥 Kundenverwaltung</h2>
+          <span id="clients-count" style="font-size:var(--font-size-sm);color:var(--color-gray-500);"></span>
+        </div>
+
+        <div class="adm-filters">
+          <input type="text" class="adm-search" id="client-search" placeholder="🔍 Suche nach Name oder E-Mail...">
+          <select class="adm-filter-select" id="filter-active">
+            <option value="">Alle Kunden</option>
+            <option value="true">Aktiv</option>
+            <option value="false">Deaktiviert</option>
+          </select>
+          <button class="btn btn-primary btn-sm" id="btn-refresh-clients">🔄 Aktualisieren</button>
+        </div>
+
+        <div class="adm-card" style="padding:0;">
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>E-Mail</th>
+                  <th>Telefon</th>
+                  <th>Anträge</th>
+                  <th>Registriert</th>
+                  <th>Status</th>
+                  <th>Aktionen</th>
+                </tr>
+              </thead>
+              <tbody id="clients-tbody">
+                <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--color-gray-400);">Wird geladen...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="clients-pagination" class="pagination" style="margin-top:var(--spacing-xl);"></div>
+
+      </div><!-- /panel-clients -->
+
+
+      <!-- ══ PANNEAU MESSAGES ══ -->
+      <div class="adm-panel" id="panel-messages">
+
+        <h2 style="font-size:1.3rem;color:var(--color-primary);margin-bottom:var(--spacing-xl);">✉️ Kontaktnachrichten</h2>
+
+        <div class="adm-card" style="padding:0;">
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>Von</th>
+                  <th>Betreff</th>
+                  <th>Datum</th>
+                  <th>Status</th>
+                  <th>Aktionen</th>
+                </tr>
+              </thead>
+              <tbody id="messages-tbody">
+                <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--color-gray-400);">Wird geladen...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /panel-messages -->
+
+
+      <!-- ══ PANNEAU CMS ══ -->
+      <div class="adm-panel" id="panel-cms">
+
+        <h2 style="font-size:1.3rem;color:var(--color-primary);margin-bottom:var(--spacing-sm);">✏️ Website-Inhalte bearbeiten</h2>
+        <p style="color:var(--color-gray-500);font-size:var(--font-size-sm);margin-bottom:var(--spacing-xl);">
+          Änderungen werden sofort auf der Website veröffentlicht.
+        </p>
+
+        <!-- Startseite -->
+        <div class="cms-section" id="cms-homepage">
+          <div class="cms-section-header" onclick="AdminCMS.toggle('homepage')">
+            <span>🏠 Startseite (Hero &amp; Statistiken)</span>
+            <span id="cms-homepage-arrow">▼</span>
+          </div>
+          <div class="cms-section-body">
+            <div class="form-group">
+              <label class="form-label">Haupttitel (Hero)</label>
+              <input type="text" class="cms-textarea" id="cms-hero-title" style="min-height:unset;height:42px;resize:none;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Untertitel (Hero)</label>
+              <textarea class="cms-textarea" id="cms-hero-subtitle" rows="2"></textarea>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="AdminCMS.save('homepage')">💾 Speichern</button>
+          </div>
+        </div>
+
+        <!-- Zinssätze -->
+        <div class="cms-section" id="cms-rates">
+          <div class="cms-section-header" onclick="AdminCMS.toggle('rates')">
+            <span>💰 Zinssätze &amp; Konditionen</span>
+            <span id="cms-rates-arrow">▼</span>
+          </div>
+          <div class="cms-section-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-lg);" id="cms-rates-grid">
+              <!-- Généré dynamiquement -->
+            </div>
+            <button class="btn btn-primary btn-sm" style="margin-top:var(--spacing-lg);" onclick="AdminCMS.save('loan_rates')">💾 Zinssätze speichern</button>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="cms-section" id="cms-faq">
+          <div class="cms-section-header" onclick="AdminCMS.toggle('faq')">
+            <span>❓ FAQ Fragen &amp; Antworten</span>
+            <span id="cms-faq-arrow">▼</span>
+          </div>
+          <div class="cms-section-body">
+            <div id="faq-items-list"></div>
+            <button class="btn btn-outline btn-sm" onclick="AdminCMS.addFaqItem()">+ Frage hinzufügen</button>
+            <button class="btn btn-primary btn-sm" style="margin-left:var(--spacing-md);" onclick="AdminCMS.save('faq')">💾 FAQ speichern</button>
+          </div>
+        </div>
+
+        <!-- Témoignages -->
+        <div class="cms-section" id="cms-testimonials">
+          <div class="cms-section-header" onclick="AdminCMS.toggle('testimonials')">
+            <span>⭐ Kundenbewertungen</span>
+            <span id="cms-testimonials-arrow">▼</span>
+          </div>
+          <div class="cms-section-body">
+            <div id="testimonials-list"></div>
+            <button class="btn btn-outline btn-sm" onclick="AdminCMS.addTestimonial()">+ Bewertung hinzufügen</button>
+            <button class="btn btn-primary btn-sm" style="margin-left:var(--spacing-md);" onclick="AdminCMS.save('testimonials')">💾 Bewertungen speichern</button>
+          </div>
+        </div>
+
+        <!-- Coordonnées -->
+        <div class="cms-section" id="cms-contact-info">
+          <div class="cms-section-header" onclick="AdminCMS.toggle('contact-info')">
+            <span>📍 Kontaktdaten</span>
+            <span id="cms-contact-info-arrow">▼</span>
+          </div>
+          <div class="cms-section-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Adresse</label>
+                <input type="text" class="cms-textarea" id="cms-address" style="min-height:unset;height:42px;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Telefon</label>
+                <input type="text" class="cms-textarea" id="cms-phone" style="min-height:unset;height:42px;">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="AdminCMS.save('contact')">💾 Speichern</button>
+          </div>
+        </div>
+
+      </div><!-- /panel-cms -->
+
+
+      <!-- ══ PANNEAU PARAMÈTRES ══ -->
+      <div class="adm-panel" id="panel-settings">
+
+        <h2 style="font-size:1.3rem;color:var(--color-primary);margin-bottom:var(--spacing-xl);">⚙️ Systemeinstellungen</h2>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-xl);">
+
+          <!-- Mot de passe admin -->
+          <div class="adm-card">
+            <div class="adm-card-title">🔐 Passwort ändern</div>
+            <div id="pwd-change-msg"></div>
+            <div class="form-group">
+              <label class="form-label" for="s-cur-pwd">Aktuelles Passwort</label>
+              <input type="password" id="s-cur-pwd" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="s-new-pwd">Neues Passwort</label>
+              <input type="password" id="s-new-pwd" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="s-new-pwd2">Passwort bestätigen</label>
+              <input type="password" id="s-new-pwd2" class="form-control">
+            </div>
+            <button class="btn btn-primary" id="btn-change-pwd">Passwort ändern</button>
+          </div>
+
+          <!-- Mode maintenance -->
+          <div class="adm-card">
+            <div class="adm-card-title">🛠️ Wartungsmodus</div>
+            <p style="font-size:var(--font-size-sm);color:var(--color-gray-500);margin-bottom:var(--spacing-xl);">
+              Bei aktiviertem Wartungsmodus ist die Website für Besucher nicht erreichbar.
+            </p>
+            <label class="form-check" for="maintenance-toggle" style="margin-bottom:var(--spacing-xl);">
+              <input type="checkbox" id="maintenance-toggle">
+              <div class="form-check-custom"></div>
+              <span class="form-check-label" style="font-weight:600;">Wartungsmodus aktivieren</span>
+            </label>
+            <button class="btn btn-primary btn-sm" id="btn-save-maintenance">Speichern</button>
+          </div>
+
+          <!-- Configuration SMTP -->
+          <div class="adm-card" style="grid-column:1/-1;">
+            <div class="adm-card-title">📧 SMTP E-Mail Konfiguration</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-lg);">
+              <div class="form-group">
+                <label class="form-label" for="smtp-host">SMTP Host</label>
+                <input type="text" id="smtp-host" class="form-control" placeholder="smtp.gmail.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="smtp-port">Port</label>
+                <input type="number" id="smtp-port" class="form-control" placeholder="587">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="smtp-user">Benutzername</label>
+                <input type="text" id="smtp-user" class="form-control" placeholder="user@domain.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="smtp-pass">Passwort</label>
+                <input type="password" id="smtp-pass" class="form-control">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="smtp-from">Absender (From)</label>
+                <input type="text" id="smtp-from" class="form-control" placeholder="noreply@kreditprofi.de">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btn-save-smtp">💾 SMTP speichern</button>
+          </div>
+
+        </div>
+      </div><!-- /panel-settings -->
+
+    </div><!-- /adm-content -->
+  </main><!-- /adm-main -->
+
+</div><!-- /admin-wrap -->
+
+
+<!-- ══ MODAL DOSSIER DÉTAIL ═════════════════════════════════ -->
+<div id="dossier-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal" style="max-width:min(700px, 100%);">
+    <div class="modal-header">
+      <h3 id="modal-dossier-title" style="margin:0;font-size:1.1rem;">Antragsdetails</h3>
+      <button onclick="document.getElementById('dossier-modal').style.display='none'"
+        style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:#666;line-height:1;padding:0;">×</button>
+    </div>
+    <div class="modal-body" id="modal-dossier-body"></div>
+    <div class="modal-footer" style="flex-wrap:wrap;gap:0.75rem;">
+      <select id="modal-status-select" class="adm-filter-select">
+        <option value="pending">In Bearbeitung</option>
+        <option value="review">In Prüfung</option>
+        <option value="approved">Genehmigt</option>
+        <option value="refused">Abgelehnt</option>
+      </select>
+      <input type="text" id="modal-admin-note" class="adm-search" placeholder="Interne Notiz (optional)" style="flex:1;min-width:120px;max-width:100%;">
+      <button class="btn btn-primary btn-sm" id="btn-update-status">✅ Status aktualisieren</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('dossier-modal').style.display='none'">Schließen</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ MODAL CLIENT DÉTAIL ══════════════════════════════════ -->
+<div id="client-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal" style="max-width:min(600px, 100%);">
+    <div class="modal-header">
+      <h3 id="modal-client-title" style="margin:0;font-size:1.1rem;">Kundendetails</h3>
+      <button onclick="document.getElementById('client-modal').style.display='none'"
+        style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:#666;line-height:1;padding:0;">×</button>
+    </div>
+    <div class="modal-body" id="modal-client-body"></div>
+    <div class="modal-footer" style="gap:0.75rem;">
+      <button class="btn btn-sm" id="btn-toggle-client" style="background:var(--color-warning);color:white;">Deaktivieren</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('client-modal').style.display='none'">Schließen</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
+<script src="assets/js/loader.js"></script>
+<script src="assets/js/config.js"></script>
+<script defer src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script defer src="assets/js/admin.js"></script>
+
+</body>
+</html>

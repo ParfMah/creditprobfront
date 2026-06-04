@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<style id="critical-css">
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden;scroll-behavior:smooth}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  #page-loader{position:fixed;inset:0;z-index:99999;background:#0B1D3A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .45s ease,visibility .45s ease}
+  #page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .loader-logo{display:flex;align-items:center;gap:12px}
+  .loader-logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#D4A843,#b5882a);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .loader-logo-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff}
+  .loader-logo-text span{display:block;font-size:.65rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .loader-spinner-wrap{position:relative;width:56px;height:56px}
+  .loader-spinner{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.08);border-top-color:#D4A843;border-right-color:rgba(212,168,67,.4);animation:spin .9s cubic-bezier(.45,.05,.55,.95) infinite}
+  .loader-spinner-inner{position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,255,255,.04);border-bottom-color:rgba(212,168,67,.6);animation:spin 1.4s cubic-bezier(.45,.05,.55,.95) infinite reverse}
+  .loader-progress-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .loader-progress-fill{height:100%;background:linear-gradient(90deg,#D4A843,#e8c96a,#D4A843);background-size:200% 100%;border-radius:99px;animation:prog 1.2s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes prog{0%{background-position:200% 0;width:20%}50%{background-position:0% 0;width:80%}100%{background-position:-200% 0;width:100%}}
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center}
+</style>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#D4A843">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Alle Kreditarten von KreditProfi Deutschland: Privatkredit, Immobilienkredit, Autokredit, Hypothekendarlehen und Kreditrückkauf. Günstige Zinsen ab 0,89%.">
+  <title>Unsere Kreditprodukte — KreditProfi Deutschland</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Privatkredit, Immobilienkredit, Autokredit, Geschäftskredit und Umschuldung. Finden Sie das passende Kreditprodukt bei KreditProfi Deutschland.">
+  <meta name="keywords" content="Privatkredit, Immobilienkredit, Autokredit, Geschäftskredit, Umschuldung, Kreditprodukte">
+  <meta name="author" content="KreditProfi Deutschland GmbH">
+  <meta name="robots" content="index, follow">
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="Unsere Kreditprodukte — KreditProfi Deutschland">
+  <meta property="og:description" content="Privatkredit, Immobilienkredit, Autokredit, Geschäftskredit und Umschuldung. Finden Sie das passende Kreditprodukt bei KreditProfi Deutschland.">
+  <meta property="og:url"         content="https://kreditprofi-deutschland.onrender.com/leistungen.html">
+  <meta property="og:site_name"   content="KreditProfi Deutschland">
+  <meta property="og:locale"      content="de_DE">
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary">
+  <meta name="twitter:title"       content="Unsere Kreditprodukte — KreditProfi Deutschland">
+  <meta name="twitter:description" content="Privatkredit, Immobilienkredit, Autokredit, Geschäftskredit und Umschuldung. Finden Sie das passende Kreditprodukt bei KreditProfi Deutschland.">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/cookie-consent.css">
+  <link rel="stylesheet" href="assets/css/loader.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <style>
+    /* ── STYLES SPÉCIFIQUES PAGE SERVICES ── */
+
+    /* ── BANNIÈRES GRADIENT (remplacement images Unsplash) ── */
+    .loan-detail-banner {
+      width: 100%;
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Privatkredit — bleu nuit → saphir profond */
+    .loan-banner-privat {
+      background:
+        linear-gradient(135deg, rgba(11,29,58,0.88) 0%, rgba(26,79,168,0.75) 50%, rgba(11,29,58,0.88) 100%),
+        url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&q=75&fm=webp') center/cover no-repeat;
+    }
+    .loan-banner-privat::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 30% 50%, rgba(212,168,67,0.12) 0%, transparent 60%);
+    }
+
+    /* Immobilienkredit — vert forêt → bleu */
+    .loan-banner-immo {
+      background:
+        linear-gradient(135deg, rgba(13,43,29,0.87) 0%, rgba(15,123,108,0.70) 50%, rgba(11,29,58,0.87) 100%),
+        url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=75&fm=webp') center/cover no-repeat;
+    }
+    .loan-banner-immo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 55% 50% at 35% 50%, rgba(5,150,105,0.15) 0%, transparent 60%);
+    }
+
+    /* Autokredit — anthracite → rouge foncé */
+    .loan-banner-auto {
+      background:
+        linear-gradient(135deg, rgba(26,10,10,0.90) 0%, rgba(127,29,29,0.78) 50%, rgba(11,29,58,0.90) 100%),
+        url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&q=75&fm=webp') center/cover no-repeat;
+    }
+    .loan-banner-auto::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 40% 50%, rgba(220,38,38,0.12) 0%, transparent 55%);
+    }
+
+    /* Geschäftskredit — gris ardoise → bleu saphir */
+    .loan-banner-business {
+      background:
+        linear-gradient(135deg, rgba(30,42,58,0.90) 0%, rgba(26,79,168,0.80) 60%, rgba(11,29,58,0.90) 100%),
+        url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=75&fm=webp') center/cover no-repeat;
+    }
+    .loan-banner-business::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 55% at 70% 45%, rgba(212,168,67,0.12) 0%, transparent 55%);
+    }
+
+    /* Umschuldungskredit — violet → bleu marine */
+    .loan-banner-umschuld {
+      background:
+        linear-gradient(135deg, rgba(30,11,58,0.90) 0%, rgba(74,29,150,0.80) 50%, rgba(11,29,58,0.90) 100%),
+        url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=75&fm=webp') center/cover no-repeat;
+    }
+    .loan-banner-umschuld::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 55% 50% at 40% 50%, rgba(139,92,246,0.18) 0%, transparent 55%);
+    }
+
+    /* Contenu intérieur de la bannière */
+    .loan-banner-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .loan-banner-icon {
+      font-size: 4rem;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+      animation: bannerIconFloat 3s ease-in-out infinite;
+    }
+
+    .loan-banner-label {
+      font-family: var(--font-heading);
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+    }
+
+    @keyframes bannerIconFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    @media (max-width: 768px) {
+      .loan-detail-banner { height: 180px; }
+      .loan-banner-icon   { font-size: 3rem; }
+      .loan-banner-label  { font-size: 1.4rem; }
+    }
+
+    @media (max-width: 480px) {
+      .loan-detail-banner { height: 150px; }
+    }
+
+    /* ── SUPPRIME la règle .loan-detail-image (remplacée) ── */
+    .loan-detail-image { display: none; }
+
+
+    .loan-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: var(--spacing-4xl);
+    }
+
+    .loan-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--color-white);
+      border: 2px solid var(--color-gray-200);
+      border-radius: var(--border-radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-gray-600);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .loan-nav-btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .loan-nav-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--color-white);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Carte de prêt détaillée */
+    .loan-detail-card {
+      background: var(--color-white);
+      border-radius: var(--border-radius-2xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: var(--spacing-4xl);
+    }
+
+    /* Image de la carte */
+    .loan-detail-image {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Corps de la carte */
+    .loan-detail-body {
+      padding: var(--spacing-3xl);
+    }
+
+    /* En-tête de la fiche */
+    .loan-detail-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-xl);
+      margin-bottom: var(--spacing-2xl);
+      padding-bottom: var(--spacing-2xl);
+      border-bottom: 2px solid var(--color-gray-200);
+    }
+
+    .loan-detail-icon {
+      width: 80px;
+      height: 80px;
+      min-width: 80px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      border-radius: var(--border-radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .loan-detail-title-area h2 {
+      font-size: var(--font-size-3xl);
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .loan-detail-rate-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.08));
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: var(--border-radius-full);
+      padding: 6px 18px;
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-secondary-dark);
+    }
+
+    /* Grille des conditions */
+    .loan-conditions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .condition-item {
+      background: var(--color-bg-light);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-lg);
+      text-align: center;
+      border: 1px solid var(--color-gray-200);
+      transition: all var(--transition-base);
+    }
+
+    .condition-item:hover {
+      border-color: var(--color-secondary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .condition-icon { font-size: 1.8rem; margin-bottom: 8px; }
+
+    .condition-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-gray-500);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .condition-value {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+
+    /* Layout 2 colonnes pour description + avantages */
+    .loan-detail-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-3xl);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    /* Liste des avantages */
+    .advantages-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .advantages-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--color-gray-100);
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-700);
+      line-height: 1.6;
+    }
+
+    .advantages-list li:last-child { border-bottom: none; }
+
+    .advantages-list li::before {
+      content: '✓';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      background: var(--color-success);
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    /* Conditions d'éligibilité — fond clair lisible */
+    .eligibility-box {
+      background: linear-gradient(135deg, #f0f5ff, #e8f0fe);
+      border: 2px solid rgba(26,79,168,0.18);
+      border-radius: var(--border-radius-xl);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    /* Bouton simuler */
+    .loan-cta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-xl);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      border-radius: var(--border-radius-xl);
+    }
+
+    .loan-cta-text {
+      color: white;
+    }
+
+    .loan-cta-text p {
+      color: rgba(255,255,255,0.75);
+      margin: 0;
+      font-size: var(--font-size-sm);
+    }
+
+    .loan-cta-text strong {
+      color: var(--color-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .loan-detail-header    { flex-direction: column; }
+      .loan-detail-icon      { width: 60px; height: 60px; min-width: 60px; font-size: 1.8rem; }
+      .loan-conditions       { grid-template-columns: 1fr 1fr; }
+      .loan-detail-columns   { grid-template-columns: 1fr; gap: var(--spacing-xl); }
+      .eligibility-list      { grid-template-columns: 1fr; }
+      .loan-detail-image     { height: 220px; }
+      .loan-detail-body      { padding: var(--spacing-xl); }
+      .loan-cta-bar          { flex-direction: column; text-align: center; }
+      .loan-nav              { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap;
+                               padding-bottom: 6px; scrollbar-width: none; -ms-overflow-style: none; }
+      .loan-nav::-webkit-scrollbar { display: none; }
+      .loan-detail-title-area h2 { font-size: var(--font-size-2xl); }
+    }
+
+    @media (max-width: 480px) {
+      .loan-conditions { grid-template-columns: 1fr; }
+      .loan-detail-body { padding: var(--spacing-lg); }
+      .loan-cta-bar  { padding: var(--spacing-lg); }
+      .loan-cta-text strong { display: block; }
+      .condition-item { padding: var(--spacing-md); }
+      .eligibility-box { padding: var(--spacing-lg); }
+      .loan-nav-btn { padding: 10px 16px; font-size: var(--font-size-xs); }
+    }
+
+    @media (max-width: 375px) {
+      .loan-nav-btn { padding: 8px 12px; }
+      .loan-detail-image { height: 180px; }
+    }
+  </style>
+
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="KreditProfi Deutschland">
+  <meta property="og:locale"      content="de_DE">
+  <meta property="og:url"         content="https://kreditprofi-backend.onrender.com/leistungen.html">
+  <meta property="og:title"       content="Unsere Kreditangebote — KreditProfi Deutschland">
+  <meta property="og:description" content="Entdecken Sie unsere Kreditprodukte: Privatkredit ab 1,99%, Immobilienkredit ab 0,89%, Autokredit ab 2,49%.">
+  <meta property="og:image"       content="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80&fm=webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height"content="630">
+  <meta property="og:image:alt"   content="KreditProfi Deutschland">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="Unsere Kreditangebote — KreditProfi Deutschland">
+  <meta name="twitter:description"content="Entdecken Sie unsere Kreditprodukte: Privatkredit ab 1,99%, Immobilienkredit ab 0,89%, Autokredit ab 2,49%.">
+  <meta name="twitter:image"      content="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80&fm=webp">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Kreditangebote KreditProfi Deutschland",
+    "description": "Alle Kreditprodukte von KreditProfi Deutschland",
+    "itemListElement": [
+      {
+        "@type": "FinancialProduct",
+        "position": 1,
+        "name": "Privatkredit",
+        "description": "Privatkredit bis 75.000 € mit flexibler Laufzeit von 12–120 Monaten.",
+        "feesAndCommissionsSpecification": "ab 1,99% p.a. effektiver Jahreszins",
+        "url": "https://kreditprofi-backend.onrender.com/leistungen.html#privatkredit"
+      },
+      {
+        "@type": "FinancialProduct",
+        "position": 2,
+        "name": "Immobilienkredit",
+        "description": "Immobilienfinanzierung bis 1.000.000 € mit langfristiger Zinssicherheit.",
+        "feesAndCommissionsSpecification": "ab 0,89% p.a. effektiver Jahreszins",
+        "url": "https://kreditprofi-backend.onrender.com/leistungen.html#immobilienkredit"
+      },
+      {
+        "@type": "FinancialProduct",
+        "position": 3,
+        "name": "Autokredit",
+        "description": "Autokredit bis 100.000 € für Neuwagen, Gebrauchtfahrzeuge und E-Autos.",
+        "feesAndCommissionsSpecification": "ab 2,49% p.a. effektiver Jahreszins",
+        "url": "https://kreditprofi-backend.onrender.com/leistungen.html#autokredit"
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+<script>
+(function(){
+  // Retour navigateur (bfcache) : enlève tout masquage résiduel instantanément
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted){
+      document.body.style.visibility = '';
+      document.body.style.opacity = '';
+      document.body.classList.remove('css-loading');
+      var l = document.getElementById('page-loader');
+      if(l){ l.style.opacity='0'; l.style.visibility='hidden'; if(l.parentNode) l.parentNode.removeChild(l); }
+    }
+  });
+})();
+</script>
+
+<!-- ══ HEADER ════════════════════════════════════════════════ -->
+<header id="site-header" class="site-header header-light" role="banner">
+  <nav class="navbar" aria-label="Hauptnavigation">
+    <a href="index.html" class="logo" aria-label="KreditProfi Deutschland">
+      <div class="logo-icon">💰</div>
+      <div class="logo-text" style="color:var(--color-primary);">KreditProfi<span>Deutschland</span></div>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"       class="nav-link" style="color:var(--color-primary);">Startseite</a></li>
+      <li><a href="leistungen.html"  class="nav-link active" style="color:var(--color-primary);">Leistungen</a></li>
+      <li><a href="simulation.html"  class="nav-link" style="color:var(--color-primary);">Kreditrechner</a></li>
+      <li><a href="ueber-uns.html"   class="nav-link" style="color:var(--color-primary);">Über uns</a></li>
+      <li><a href="kontakt.html"     class="nav-link" style="color:var(--color-primary);">Kontakt</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="mein-konto.html" id="nav-account-link" class="nav-link" style="display:none;color:var(--color-primary);"><span id="nav-user-name">Mein Konto</span></a>
+      <a href="mein-konto.html#notifications" id="nav-notif-area" class="nav-notif" style="display:none;background:rgba(10,22,40,0.08);color:var(--color-primary);" aria-label="Benachrichtigungen">🔔<span class="notif-badge" id="nav-notif-count" style="display:none;">0</span></a>
+      <a href="login.html"      id="nav-login-btn"   class="btn btn-outline btn-sm">Anmelden</a>
+      <button id="nav-logout-btn" class="btn btn-outline btn-sm" style="display:none;" onclick="window.KP?.logout()">Abmelden</button>
+      <a href="beantragen.html" class="btn btn-primary btn-sm hide-mobile">Jetzt beantragen</a>
+      <button id="menu-toggle" class="menu-toggle" aria-label="Menü öffnen" aria-expanded="false"><span style="background:var(--color-primary);"></span><span style="background:var(--color-primary);"></span><span style="background:var(--color-primary);"></span></button>
+    </div>
+  </nav>
+</header>
+
+<nav id="mobile-menu" class="mobile-menu">
+  <a href="index.html"       class="mobile-nav-link">🏠 Startseite</a>
+  <a href="leistungen.html"  class="mobile-nav-link">📋 Leistungen</a>
+  <a href="simulation.html"  class="mobile-nav-link">🧮 Kreditrechner</a>
+  <a href="ueber-uns.html"   class="mobile-nav-link">👥 Über uns</a>
+  <a href="kontakt.html"     class="mobile-nav-link">✉️ Kontakt</a>
+  <a href="mein-konto.html"  class="mobile-nav-link">👤 Mein Konto</a>
+  <hr style="border-color:rgba(255,255,255,0.1);margin:1rem 0;">
+  <a href="beantragen.html"  class="btn btn-primary btn-full" style="text-align:center;">Jetzt beantragen</a>
+</nav>
+
+
+<!-- ══ BANNIÈRE DE PAGE ═══════════════════════════════════════ -->
+<div class="page-offset">
+  <div class="page-banner page-banner-leistungen">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span class="breadcrumb-item"><a href="index.html">Startseite</a></span>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-item">Leistungen</span>
+      </nav>
+      <h1 class="animate-on-scroll fade-up">Unsere Kreditprodukte</h1>
+      <p class="animate-on-scroll fade-up delay-1">Maßgeschneiderte Finanzierungslösungen für jeden Bedarf — transparent, günstig und schnell.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ INTRO + NAVIGATION DES PRÊTS ══════════════════════════ -->
+<section class="section" style="padding-bottom:0;">
+  <div class="container">
+
+    <div class="section-header animate-on-scroll fade-up" style="margin-bottom:var(--spacing-3xl);">
+      <span class="section-tag">🏦 Alle Kreditarten im Überblick</span>
+      <h2>Finden Sie den Kredit,<br>der zu Ihnen passt</h2>
+      <div class="divider"></div>
+      <p>Wählen Sie aus unseren fünf Kreditprodukten das für Sie optimale Angebot. Alle Zinssätze sind indikativ — Ihr persönliches Angebot erhalten Sie nach Antragstellung.</p>
+    </div>
+
+    <!-- Navigation rapide vers chaque prêt -->
+    <nav class="loan-nav animate-on-scroll fade-up delay-1" aria-label="Kreditarten Navigation">
+      <a href="#privatkredit"       class="loan-nav-btn active">💼 Privatkredit</a>
+      <a href="#immobilienkredit"   class="loan-nav-btn">🏠 Immobilienkredit</a>
+      <a href="#autokredit"         class="loan-nav-btn">🚗 Autokredit</a>
+      <a href="#hypothekendarlehen" class="loan-nav-btn">🏦 Hypothekendarlehen</a>
+      <a href="#kreditrueckkauf"    class="loan-nav-btn">🔄 Kreditrückkauf</a>
+    </nav>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FICHE 1 — PRIVATKREDIT
+══════════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="privatkredit" aria-labelledby="privatkredit-title">
+  <div class="container">
+    <div class="loan-detail-card animate-on-scroll fade-up">
+
+      <div class="loan-detail-banner loan-banner-privat">
+        <div class="loan-banner-inner">
+          <span class="loan-banner-icon">💼</span>
+          <div class="loan-banner-label">Privatkredit</div>
+        </div>
+      </div>
+
+      <div class="loan-detail-body">
+
+        <!-- En-tête -->
+        <div class="loan-detail-header">
+          <div class="loan-detail-icon">💼</div>
+          <div class="loan-detail-title-area">
+            <h2 id="privatkredit-title">Privatkredit</h2>
+            <p style="color:var(--color-gray-600);margin-bottom:0.75rem;">
+              Flexible Finanzierung für Ihre persönlichen Wünsche und Projekte
+            </p>
+            <span class="loan-detail-rate-badge">✨ Ab 1,99% effektiver Jahreszins</span>
+          </div>
+        </div>
+
+        <!-- Conditions clés -->
+        <div class="loan-conditions">
+          <div class="condition-item">
+            <div class="condition-icon">💶</div>
+            <div class="condition-label">Kreditbetrag</div>
+            <div class="condition-value">1.000 – 75.000 €</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📅</div>
+            <div class="condition-label">Laufzeit</div>
+            <div class="condition-value">12 – 120 Monate</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📉</div>
+            <div class="condition-label">Zinssatz ab</div>
+            <div class="condition-value">1,99% p.a.</div>
+          </div>
+        </div>
+
+        <!-- Description + Avantages -->
+        <div class="loan-detail-columns">
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Beschreibung</h3>
+            <p>Der Privatkredit von KreditProfi Deutschland ist die ideale Lösung für alle, die eine flexible und unkomplizierte Finanzierung benötigen. Ob für die Renovierung Ihrer Wohnung, eine große Anschaffung, eine Traumreise oder die Konsolidierung bestehender Verbindlichkeiten — unser Privatkredit bietet Ihnen die finanzielle Freiheit, die Sie brauchen.</p>
+            <p>Mit Laufzeiten von 12 bis 120 Monaten und Beträgen von 1.000 bis 75.000 Euro passen wir den Kredit genau an Ihre Bedürfnisse und Ihre finanzielle Situation an. Der gesamte Antragsprozess läuft vollständig digital und papierlos ab.</p>
+            <p>Dank unserer langjährigen Partnerschaften mit führenden deutschen Finanzinstitutionen können wir Ihnen besonders attraktive Konditionen anbieten. Ihr persönlicher Zinssatz wird individuell auf Basis Ihrer Bonität ermittelt.</p>
+          </div>
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Ihre Vorteile</h3>
+            <ul class="advantages-list">
+              <li>Vollständig digitaler Antragsprozess — kein Papier</li>
+              <li>Kreditentscheidung innerhalb von 24 Stunden</li>
+              <li>Kostenlose Sondertilgung jederzeit möglich</li>
+              <li>Fester Zinssatz für die gesamte Laufzeit</li>
+              <li>Keine Bearbeitungsgebühren oder versteckten Kosten</li>
+              <li>SCHUFA-neutrale Voranfrage ohne Auswirkung</li>
+              <li>Auszahlung binnen 48 Stunden nach Genehmigung</li>
+              <li>Flexible Monatsraten an Ihr Budget angepasst</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Conditions d'éligibilité -->
+        <div class="eligibility-box">
+          <h4>📋 Voraussetzungen für die Antragstellung</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">Mindestalter: 18 Jahre</div>
+            <div class="eligibility-item">Wohnsitz in Deutschland</div>
+            <div class="eligibility-item">Regelmäßiges Einkommen nachweisbar</div>
+            <div class="eligibility-item">Deutsches Bankkonto (IBAN)</div>
+            <div class="eligibility-item">Ausreichende Kreditwürdigkeit (SCHUFA)</div>
+            <div class="eligibility-item">Gültiger Personalausweis oder Reisepass</div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="loan-cta-bar">
+          <div class="loan-cta-text">
+            <h4 style="color:white;margin-bottom:4px;">Bereit für Ihren Privatkredit?</h4>
+            <p>Simulieren Sie jetzt kostenlos Ihre monatliche Rate — <strong>unverbindlich und in 2 Minuten.</strong></p>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <a href="simulation.html?type=privatkredit" class="btn btn-white">🧮 Jetzt simulieren</a>
+            <a href="beantragen.html?type=privatkredit" class="btn btn-outline-white">Antrag stellen →</a>
+          </div>
+        </div>
+
+      </div><!-- /loan-detail-body -->
+    </div><!-- /loan-detail-card -->
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FICHE 2 — IMMOBILIENKREDIT
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="immobilienkredit" aria-labelledby="immo-title">
+  <div class="container">
+    <div class="loan-detail-card animate-on-scroll fade-up">
+
+      <div class="loan-detail-banner loan-banner-immo">
+        <div class="loan-banner-inner">
+          <span class="loan-banner-icon">🏠</span>
+          <div class="loan-banner-label">Immobilienkredit</div>
+        </div>
+      </div>
+
+      <div class="loan-detail-body">
+
+        <div class="loan-detail-header">
+          <div class="loan-detail-icon">🏠</div>
+          <div class="loan-detail-title-area">
+            <h2 id="immo-title">Immobilienkredit</h2>
+            <p style="color:var(--color-gray-600);margin-bottom:0.75rem;">
+              Verwirklichen Sie Ihren Traum vom Eigenheim oder Ihrer Immobilieninvestition
+            </p>
+            <span class="loan-detail-rate-badge">✨ Ab 0,89% effektiver Jahreszins</span>
+          </div>
+        </div>
+
+        <div class="loan-conditions">
+          <div class="condition-item">
+            <div class="condition-icon">💶</div>
+            <div class="condition-label">Kreditbetrag</div>
+            <div class="condition-value">50.000 – 1.000.000 €</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📅</div>
+            <div class="condition-label">Laufzeit</div>
+            <div class="condition-value">60 – 360 Monate</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📉</div>
+            <div class="condition-label">Zinssatz ab</div>
+            <div class="condition-value">0,89% p.a.</div>
+          </div>
+        </div>
+
+        <div class="loan-detail-columns">
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Beschreibung</h3>
+            <p>Mit dem Immobilienkredit von KreditProfi Deutschland realisieren Sie Ihren Traum vom eigenen Zuhause zu besonders attraktiven Konditionen. Wir begleiten Sie durch den gesamten Prozess der Immobilienfinanzierung — von der ersten Beratung bis zur vollständigen Auszahlung.</p>
+            <p>Ob Neubau, Bestandsimmobilie, Eigentumswohnung oder Ferienhaus — wir finanzieren Ihr Immobilienprojekt mit Beträgen von 50.000 bis 1.000.000 Euro und Laufzeiten bis zu 30 Jahren. Profitieren Sie von unserem Rekord-Zinssatz ab 0,89% p.a.</p>
+            <p>Unser Expertenteam prüft Ihren Antrag sorgfältig und individuell und erstellt Ihnen ein maßgeschneidertes Finanzierungskonzept, das perfekt zu Ihrer Lebens- und Einkommenssituation passt.</p>
+          </div>
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Ihre Vorteile</h3>
+            <ul class="advantages-list">
+              <li>Rekordtiefe Zinsen ab 0,89% p.a. (bonitätsabhängig)</li>
+              <li>Finanzierung bis zu 100% des Kaufpreises möglich</li>
+              <li>Zinsbindung von 5 bis 30 Jahren wählbar</li>
+              <li>Kostenlose Sondertilgungen bis 10% pro Jahr</li>
+              <li>Tilgungspause in finanziellen Engpässen</li>
+              <li>Persönliche Beratung durch Immobilien-Spezialisten</li>
+              <li>Schnelle Kreditentscheidung dank digitaler Prozesse</li>
+              <li>Kombination mit staatlichen Förderprogrammen (KfW)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="eligibility-box">
+          <h4>📋 Voraussetzungen für die Antragstellung</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">Mindestalter: 18 Jahre</div>
+            <div class="eligibility-item">Wohnsitz in Deutschland</div>
+            <div class="eligibility-item">Festes Einkommen seit min. 2 Jahren</div>
+            <div class="eligibility-item">Eigenkapital empfohlen (min. 10–20%)</div>
+            <div class="eligibility-item">Positiver SCHUFA-Score</div>
+            <div class="eligibility-item">Grundbucheintrag der Immobilie</div>
+          </div>
+        </div>
+
+        <div class="loan-cta-bar">
+          <div class="loan-cta-text">
+            <h4 style="color:white;margin-bottom:4px;">Ihren Immobilienkredit berechnen</h4>
+            <p>Kostenlose Berechnung Ihrer monatlichen Belastung — <strong>in 2 Minuten, unverbindlich.</strong></p>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <a href="simulation.html?type=immobilienkredit" class="btn btn-white">🧮 Jetzt simulieren</a>
+            <a href="beantragen.html?type=immobilienkredit" class="btn btn-outline-white">Antrag stellen →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FICHE 3 — AUTOKREDIT
+══════════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="autokredit" aria-labelledby="auto-title">
+  <div class="container">
+    <div class="loan-detail-card animate-on-scroll fade-up">
+
+      <div class="loan-detail-banner loan-banner-auto">
+        <div class="loan-banner-inner">
+          <span class="loan-banner-icon">🚗</span>
+          <div class="loan-banner-label">Autokredit</div>
+        </div>
+      </div>
+
+      <div class="loan-detail-body">
+
+        <div class="loan-detail-header">
+          <div class="loan-detail-icon">🚗</div>
+          <div class="loan-detail-title-area">
+            <h2 id="auto-title">Autokredit</h2>
+            <p style="color:var(--color-gray-600);margin-bottom:0.75rem;">
+              Günstiger Zweckgebundener Kredit für Ihr neues oder gebrauchtes Fahrzeug
+            </p>
+            <span class="loan-detail-rate-badge">✨ Ab 2,49% effektiver Jahreszins</span>
+          </div>
+        </div>
+
+        <div class="loan-conditions">
+          <div class="condition-item">
+            <div class="condition-icon">💶</div>
+            <div class="condition-label">Kreditbetrag</div>
+            <div class="condition-value">5.000 – 100.000 €</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📅</div>
+            <div class="condition-label">Laufzeit</div>
+            <div class="condition-value">12 – 96 Monate</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📉</div>
+            <div class="condition-label">Zinssatz ab</div>
+            <div class="condition-value">2,49% p.a.</div>
+          </div>
+        </div>
+
+        <div class="loan-detail-columns">
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Beschreibung</h3>
+            <p>Mit dem KreditProfi Autokredit fahren Sie günstig in Ihre automobile Zukunft. Unser zweckgebundener Fahrzeugkredit bietet Ihnen dank besonders günstiger Konditionen deutliche Vorteile gegenüber der Händlerfinanzierung — inklusive der Verhandlungsstärke des Barzahlers.</p>
+            <p>Ob Neuwagen, Jahreswagen, Gebrauchtwagen oder Motorrad — wir finanzieren Ihren Traum auf vier (oder zwei) Rädern bis zu einem Betrag von 100.000 Euro mit flexiblen Laufzeiten von 12 bis 96 Monaten.</p>
+            <p>Beim Autokredit profitieren Sie vom Barzahlungsrabatt beim Händler und können häufig 5–15% vom Fahrzeugpreis sparen — ein erheblicher Vorteil im Vergleich zur direkten Händlerfinanzierung.</p>
+          </div>
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Ihre Vorteile</h3>
+            <ul class="advantages-list">
+              <li>Günstiger als die meisten Händlerfinanzierungen</li>
+              <li>Barzahlungsrabatt beim Händler nutzen (5–15%)</li>
+              <li>Finanzierung für Neu- und Gebrauchtfahrzeuge</li>
+              <li>Genehmigung in 24 Stunden — Auszahlung in 48h</li>
+              <li>Keine Anzahlung erforderlich</li>
+              <li>Fahrzeug bleibt vollständig in Ihrem Eigentum</li>
+              <li>Optionale Ratenpause bei finanziellen Engpässen</li>
+              <li>Auch für Motorräder, Wohnmobile und E-Autos</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="eligibility-box">
+          <h4>📋 Voraussetzungen für die Antragstellung</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">Mindestalter: 18 Jahre</div>
+            <div class="eligibility-item">Führerschein der entsprechenden Klasse</div>
+            <div class="eligibility-item">Regelmäßiges Nettoeinkommen</div>
+            <div class="eligibility-item">Wohnsitz in Deutschland</div>
+            <div class="eligibility-item">Positiver SCHUFA-Eintrag</div>
+            <div class="eligibility-item">Fahrzeugbrief als Sicherheit</div>
+          </div>
+        </div>
+
+        <div class="loan-cta-bar">
+          <div class="loan-cta-text">
+            <h4 style="color:white;margin-bottom:4px;">Autofinanzierung berechnen</h4>
+            <p>Berechnen Sie Ihre monatliche Rate für Ihr Wunschfahrzeug — <strong>kostenlos und unverbindlich.</strong></p>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <a href="simulation.html?type=autokredit" class="btn btn-white">🧮 Jetzt simulieren</a>
+            <a href="beantragen.html?type=autokredit" class="btn btn-outline-white">Antrag stellen →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FICHE 4 — HYPOTHEKENDARLEHEN
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="hypothekendarlehen" aria-labelledby="hypo-title">
+  <div class="container">
+    <div class="loan-detail-card animate-on-scroll fade-up">
+
+      <div class="loan-detail-banner loan-banner-business">
+        <div class="loan-banner-inner">
+          <span class="loan-banner-icon">🏢</span>
+          <div class="loan-banner-label">Geschäftskredit</div>
+        </div>
+      </div>
+
+      <div class="loan-detail-body">
+
+        <div class="loan-detail-header">
+          <div class="loan-detail-icon">🏦</div>
+          <div class="loan-detail-title-area">
+            <h2 id="hypo-title">Hypothekendarlehen</h2>
+            <p style="color:var(--color-gray-600);margin-bottom:0.75rem;">
+              Großvolumige Immobilienfinanzierung mit grundbuchlich gesicherter Besicherung
+            </p>
+            <span class="loan-detail-rate-badge">✨ Ab 1,29% effektiver Jahreszins</span>
+          </div>
+        </div>
+
+        <div class="loan-conditions">
+          <div class="condition-item">
+            <div class="condition-icon">💶</div>
+            <div class="condition-label">Kreditbetrag</div>
+            <div class="condition-value">100.000 – 2.000.000 €</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📅</div>
+            <div class="condition-label">Laufzeit</div>
+            <div class="condition-value">60 – 480 Monate</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📉</div>
+            <div class="condition-label">Zinssatz ab</div>
+            <div class="condition-value">1,29% p.a.</div>
+          </div>
+        </div>
+
+        <div class="loan-detail-columns">
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Beschreibung</h3>
+            <p>Das Hypothekendarlehen von KreditProfi Deutschland ist speziell für großvolumige Immobilienfinanzierungen konzipiert. Als besonders langfristige Finanzierungsform mit grundbuchlicher Absicherung ermöglicht es Ihnen, auch Investitionen im Millionenbereich zu realisieren.</p>
+            <p>Mit Laufzeiten von bis zu 40 Jahren und Beträgen von 100.000 bis 2.000.000 Euro ist das Hypothekendarlehen ideal für Immobilieninvestoren, Gewerbetreibende oder Privatpersonen mit großen Immobilienprojekten. Profitieren Sie von unseren Rekordkonditionen ab 1,29% p.a.</p>
+            <p>Unser Spezialistenteam begleitet Sie durch den gesamten Prozess und koordiniert alle notwendigen Schritte — von der Wertermittlung über die Grundbucheintragung bis zur vollständigen Auszahlung.</p>
+          </div>
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Ihre Vorteile</h3>
+            <ul class="advantages-list">
+              <li>Günstige Langfristzinsen dank grundbuchlicher Sicherung</li>
+              <li>Finanzierungen bis zu 2.000.000 Euro möglich</li>
+              <li>Laufzeiten bis zu 40 Jahren für maximale Planbarkeit</li>
+              <li>Individuelle Tilgungsstrukturen wählbar</li>
+              <li>Anschlussfinanzierung zu Vorzugskonditionen garantiert</li>
+              <li>Forward-Darlehen zur Zinssicherung nutzbar</li>
+              <li>Steuerliche Vorteile für Kapitalanleger möglich</li>
+              <li>Persönlicher Spezialist als fester Ansprechpartner</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="eligibility-box">
+          <h4>📋 Voraussetzungen für die Antragstellung</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">Mindestalter: 21 Jahre</div>
+            <div class="eligibility-item">Wohnsitz oder Firmensitz in Deutschland</div>
+            <div class="eligibility-item">Nachweis stabiler Einkommensverhältnisse</div>
+            <div class="eligibility-item">Eigenkapital mindestens 20% empfohlen</div>
+            <div class="eligibility-item">Einzutragendes Objekt im Grundbuch</div>
+            <div class="eligibility-item">Gutachten / Wertermittlung des Objekts</div>
+          </div>
+        </div>
+
+        <div class="loan-cta-bar">
+          <div class="loan-cta-text">
+            <h4 style="color:white;margin-bottom:4px;">Hypothek individuell berechnen</h4>
+            <p>Lassen Sie sich von unserem Spezialisten beraten — <strong>kostenlos und unverbindlich.</strong></p>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <a href="simulation.html?type=hypothekendarlehen" class="btn btn-white">🧮 Jetzt simulieren</a>
+            <a href="beantragen.html?type=hypothekendarlehen" class="btn btn-outline-white">Antrag stellen →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FICHE 5 — KREDITRÜCKKAUF
+══════════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="kreditrueckkauf" aria-labelledby="rkk-title">
+  <div class="container">
+    <div class="loan-detail-card animate-on-scroll fade-up">
+
+      <div class="loan-detail-banner loan-banner-umschuld">
+        <div class="loan-banner-inner">
+          <span class="loan-banner-icon">🔄</span>
+          <div class="loan-banner-label">Umschuldungskredit</div>
+        </div>
+      </div>
+
+      <div class="loan-detail-body">
+
+        <div class="loan-detail-header">
+          <div class="loan-detail-icon">🔄</div>
+          <div class="loan-detail-title-area">
+            <h2 id="rkk-title">Kreditrückkauf</h2>
+            <p style="color:var(--color-gray-600);margin-bottom:0.75rem;">
+              Bestehende Kredite bündeln, Kosten senken und monatliche Belastung deutlich reduzieren
+            </p>
+            <span class="loan-detail-rate-badge">✨ Ab 2,99% effektiver Jahreszins</span>
+          </div>
+        </div>
+
+        <div class="loan-conditions">
+          <div class="condition-item">
+            <div class="condition-icon">💶</div>
+            <div class="condition-label">Kreditbetrag</div>
+            <div class="condition-value">5.000 – 500.000 €</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📅</div>
+            <div class="condition-label">Laufzeit</div>
+            <div class="condition-value">12 – 300 Monate</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">📉</div>
+            <div class="condition-label">Zinssatz ab</div>
+            <div class="condition-value">2,99% p.a.</div>
+          </div>
+        </div>
+
+        <div class="loan-detail-columns">
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Beschreibung</h3>
+            <p>Haben Sie mehrere Kredite bei verschiedenen Instituten laufen? Der Kreditrückkauf von KreditProfi Deutschland bündelt alle Ihre bestehenden Verbindlichkeiten in einem einzigen, deutlich günstigeren Kredit. Das Ergebnis: eine niedrigere Monatsrate, ein einfacherer Überblick und erhebliche Zinsersparnisse.</p>
+            <p>Unsere Kunden berichten von durchschnittlichen Einsparungen zwischen 200 und 600 Euro pro Monat nach einer Umschuldung über KreditProfi. Mit Beträgen bis 500.000 Euro und Laufzeiten bis 25 Jahren bieten wir maximale Flexibilität.</p>
+            <p>Unser Spezialistenteam analysiert Ihre aktuelle Schuldensituation kostenfrei und berechnet genau, wie viel Sie durch eine Umschuldung einsparen können — transparent und ohne Verpflichtung.</p>
+          </div>
+          <div>
+            <h3 style="font-size:1.3rem;margin-bottom:1rem;">Ihre Vorteile</h3>
+            <ul class="advantages-list">
+              <li>Monatliche Belastung durchschnittlich um 30–50% senken</li>
+              <li>Alle Kredite zu einem einzigen Vertrag zusammenfassen</li>
+              <li>Deutlich günstigerer Gesamtzinssatz möglich</li>
+              <li>Kostenlose Einsparpotenzial-Analyse durch Experten</li>
+              <li>Laufzeit und Rate flexibel an Budget anpassbar</li>
+              <li>Auch für Kreditkartenschulden und Überziehungskredite</li>
+              <li>Verbesserung des finanziellen Überblicks</li>
+              <li>Sondertilgungen ohne Vorfälligkeitsentschädigung</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="eligibility-box">
+          <h4>📋 Voraussetzungen für die Antragstellung</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">Mindestalter: 18 Jahre</div>
+            <div class="eligibility-item">Wohnsitz in Deutschland</div>
+            <div class="eligibility-item">Auflistung bestehender Verbindlichkeiten</div>
+            <div class="eligibility-item">Regelmäßiges Einkommen nachweisbar</div>
+            <div class="eligibility-item">Keine laufende Privatinsolvenz</div>
+            <div class="eligibility-item">Deutsches Bankkonto (IBAN)</div>
+          </div>
+        </div>
+
+        <div class="loan-cta-bar">
+          <div class="loan-cta-text">
+            <h4 style="color:white;margin-bottom:4px;">Wie viel können Sie sparen?</h4>
+            <p>Berechnen Sie jetzt Ihre mögliche Ersparnis durch Umschuldung — <strong>kostenlos und unverbindlich.</strong></p>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <a href="simulation.html?type=kreditrueckkauf" class="btn btn-white">🧮 Jetzt simulieren</a>
+            <a href="beantragen.html?type=kreditrueckkauf" class="btn btn-outline-white">Antrag stellen →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ CTA FINALE ═════════════════════════════════════════════ -->
+<section class="cta-section" style="padding:var(--spacing-4xl) 0;">
+  <div class="container" style="position:relative;z-index:1;text-align:center;">
+    <div class="animate-on-scroll zoom-in">
+      <span class="section-tag" style="color:var(--color-secondary);"><span class="text-gold">Noch Fragen?</span>
+      <h2 style="color:white;font-size:2.2rem;margin:1rem 0 1.5rem;">
+        Unsere Berater helfen Ihnen<br>bei der richtigen Wahl
+      </h2>
+      <p style="color:rgba(255,255,255,0.7);max-width:500px;margin:0 auto 2rem;">
+        Montag bis Freitag, 08:00–20:00 Uhr und Samstag, 09:00–16:00 Uhr.
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="kontakt.html"    class="btn btn-white btn-lg">✉️ Kontakt aufnehmen</a>
+        <a href="beantragen.html" class="btn btn-outline-white btn-lg">🚀 Direkt beantragen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ═════════════════════════════════════════════════ -->
+<button id="scroll-to-top" aria-label="Nach oben" style="position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--color-accent),var(--color-secondary-dark));color:white;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(30,58,138,0.4);z-index:900;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.2s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">↑</button>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-main">
+    <div class="container">
+      <div class="footer-grid">
+
+        <!-- Bloc 1 : Marque -->
+        <div class="footer-brand">
+          <a href="index.html" class="logo" style="margin-bottom:var(--spacing-md);">
+            <img src="assets/img/logo.svg" alt="KreditProfi Deutschland" class="logo-img" width="180" height="36">
+          </a>
+          <p>Ihr verlässlicher Partner für transparente, schnelle und günstige Kredite. BaFin-reguliert, DSGVO-konform, seit 2010.</p>
+          <div class="footer-certs">
+            <div class="cert-badge">🏛️ BaFin</div>
+            <div class="cert-badge">🔒 DSGVO</div>
+            <div class="cert-badge">⭐ SCHUFA</div>
+          </div>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Bloc 2 : Navigation + Contact -->
+        <div>
+          <h3 class="footer-heading">Navigation</h3>
+          <nav class="footer-links" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;">
+            <a href="index.html"      class="footer-link">Startseite</a>
+            <a href="leistungen.html" class="footer-link">Leistungen</a>
+            <a href="simulation.html" class="footer-link">Kreditrechner</a>
+            <a href="ueber-uns.html"  class="footer-link">Über uns</a>
+            <a href="kontakt.html"    class="footer-link">Kontakt</a>
+            <a href="beantragen.html" class="footer-link">Beantragen</a>
+            <a href="login.html"      class="footer-link">Mein Konto</a>
+          </nav>
+          <h3 class="footer-heading" style="margin-top:var(--spacing-lg);">Kontakt</h3>
+          <div class="footer-contact-item"><span class="footer-contact-icon">📍</span><div>Friedrichstraße 100, 10117 Berlin</div></div>
+          <div class="footer-contact-item"><span class="footer-contact-icon">📞</span><div><a href="tel:+493012345678" style="color:rgba(255,255,255,0.6);">+49 30 123 456 78</a></div></div>
+          <div class="footer-contact-item"><span class="footer-contact-icon">✉️</span><div><a href="mailto:stephaniebonneville01@gmail.com" style="color:rgba(255,255,255,0.6);">stephaniebonneville01@gmail.com</a></div></div>
+        </div>
+
+        <!-- Bloc 3 : Crédits -->
+        <div>
+          <h3 class="footer-heading">Unsere Kredite</h3>
+          <nav class="footer-links">
+            <a href="leistungen.html#privatkredit"       class="footer-link">💼 Privatkredit</a>
+            <a href="leistungen.html#immobilienkredit"   class="footer-link">🏠 Immobilienkredit</a>
+            <a href="leistungen.html#autokredit"         class="footer-link">🚗 Autokredit</a>
+            <a href="leistungen.html#hypothekendarlehen" class="footer-link">🏦 Hypothekendarlehen</a>
+            <a href="leistungen.html#kreditrueckkauf"    class="footer-link">🔄 Kreditrückkauf</a>
+          </nav>
+        </div>
+
+        <!-- Bloc 4 : Légal -->
+        <div>
+          <h3 class="footer-heading">Rechtliches</h3>
+          <nav class="footer-links">
+            <a href="impressum.html"     class="footer-link">Impressum</a>
+            <a href="datenschutz.html"   class="footer-link">Datenschutz</a>
+            <a href="agb.html"           class="footer-link">AGB</a>
+            <a href="cookie-richtlinie.html" class="footer-link">Cookie-Richtlinie</a>
+          </nav>
+          <div style="margin-top:var(--spacing-lg);padding:var(--spacing-md);background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:var(--border-radius-md);">
+            <p style="font-size:10px;color:rgba(255,255,255,0.45);margin:0;line-height:1.6;">
+              ⚠️ Kreditvermittlung unterliegt der BaFin-Aufsicht. Bonität wird geprüft. Keine Kreditgewährung ohne Bonitätsprüfung.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="footer-bottom-inner">
+        <p>&copy; <span id="footer-year">2024</span> KreditProfi Deutschland GmbH. Alle Rechte vorbehalten.</p>
+        <div class="footer-legal-links">
+          <a href="impressum.html">Impressum</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="agb.html">AGB</a>
+          <a href="cookie-richtlinie.html">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
+<script src="assets/js/loader.js"></script>
+<script src="assets/js/cookie-consent.js"></script>
+<script src="assets/js/config.js"></script>
+<script defer src="assets/js/ui.js"></script>
+<script defer src="assets/js/animations.js"></script>
+
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    window.UI?.updateNavAuth();
+
+    // Navigation active sur les boutons de la loan-nav au scroll
+    const sections = ['privatkredit', 'immobilienkredit', 'autokredit', 'hypothekendarlehen', 'kreditrueckkauf'];
+    const navBtns  = document.querySelectorAll('.loan-nav-btn');
+
+    // Détecter la section visible et activer le bouton correspondant
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { threshold: 0.3, rootMargin: '-100px 0px -50% 0px' });
+
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) sectionObserver.observe(el);
+    });
+
+    // Pré-sélectionner le type de prêt selon l'URL (#anchor)
+    const hash = window.location.hash;
+    if (hash) {
+      const target = document.querySelector(hash);
+      if (target) {
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      }
+    }
+  });
+</script>
+
+<script src="assets/js/sw-register.js"></script>
+</body>
+</html>
